@@ -8,3 +8,24 @@
  * 
  * This file contain..
  ************************************************************/
+
+ // Add header guard to avoid compiler error
+ #ifndef UTILS_H
+ #define UTILS_H
+
+ #include <string>
+ #include <vector>
+
+ using namespace std;
+
+ struct Node
+ {
+    int lineNumber;
+    vector<string> fields;
+ };
+ 
+
+
+ #endif
+
+ 
