@@ -1,7 +1,7 @@
 /*
  * @Author: Matthew Htang 
  * @Date: 2026-11-05 10:07:02 
- * @Last Modified by: mikey.zhaopeng
+ * @Last Modified by: Matthew Htang
  * @Last Modified time: 2026-11-05 10:23:31
  * 
  * 
@@ -13,15 +13,51 @@
 
 using namespace std;
 
-/*
-Trim
+//Define whitespace character, tab, newline, and carriage return
+const string WHITESPACE = " \t\n\r"; 
 
-whitespace = space, tab, '\r', '\n'
-start = first position that is NOT whitespace
-if there is no such position → return empty string
-end = last position that is NOT whitespace
-return the substring from start to end (inclusive)
-*/
+//Remove whitespace from the beginning
+//We use const reference - accessing the original WHITESPACE without modifying it
+string leftTrim(const string& s){
+
+    //(size_t)unasigned integer type (cant be negative), to store from  
+    //what index does the line start with character
+    size_t start = s.find_first_not_of(WHITESPACE); 
+   
+    //if all spaces, return empty space string
+    if (start == string::npos){
+        return "";
+
+    }
+    //else return the left trim string
+    else {
+        return s.substr(start);
+    }
+}
+
+//Remove the string from the end of the string
+string rightTrim(const string& s){
+
+    //Count the the first index from the end and store it in end
+    size_t end = s.find_last_not_of(WHITESPACE);
+
+    //If the string is all spaces, return empty
+    if (end == string::npos){
+        return "";
+    }
+
+    //else return the trimed string from the left
+    else{
+        return s.substr(0, end + 1);
+    }
+}
+
+//Remove WHITESPACES from both side
+//This return the fully trimed of a string
+//First, left trim first and then right trim, then return
+string trim(const string& s){
+    return rightTrim(leftTrim(s));
+}
 
 /*
 Split 
