@@ -9,7 +9,7 @@
 ## Summary Table
 | Team Member | Component(s) | Specific Tasks Completed | Testing/Debugging | 
 |-------------|--------------|--------------------------|-------------------|
-| Matthew |  |  |  |
+| Matthew |• Utils.h<br>•Utils.cpp |  |  |
 | Alka |  |  |  |  |
 | Sankalp |  |  |  |
 
