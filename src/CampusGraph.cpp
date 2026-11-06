@@ -1,3 +1,10 @@
+/*
+ * @Author: Sankalp (Member C)
+ * @Date: 2026-11-05
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2026-11-06 13:36:35
+ */
+
 #include "CampusGraph.h"
 #include "Utils.h"
 
@@ -37,6 +44,8 @@ bool CampusGraph::addBuilding(string name) {
     // Create an empty neighbor list for the new building.
     neighbors.push_back(vector<int>());
 
+    buildings.push_back(cleanedName);
+    neighbors.push_back(vector<int>());
     return true;
 }
 
@@ -64,6 +73,16 @@ bool CampusGraph::addConnection(string first, string second) {
     // Count each connection only once.
     connectionCount++;
 
+    if (a == -1 || b == -1 || a == b ||
+        hasConnection(first, second))
+    {
+        return false;
+    }
+
+    // Store both directions but count the undirected connection once.
+    neighbors[a].push_back(b);
+    neighbors[b].push_back(a);
+    ++connectionCount;
     return true;
 }
 
@@ -93,7 +112,7 @@ void CampusGraph::displayGraph() const {
             }
         }
 
-        cout << "\n";
+        cout << '\n';
     }
 }
 
@@ -110,6 +129,8 @@ void CampusGraph::displayStatistics() const {
              << " - Degree: "
              << neighbors[i].size() << "\n";
     }
+
+    cout << "Connected components: " << componentCount << '\n';
 }
 
 // Breadth-First Search (BFS).
@@ -135,7 +156,44 @@ void CampusGraph::bfs(string start) const {
     // Start BFS from the selected building.
     visited[startIndex] = true;
     distance[startIndex] = 0;
-    q.push(startIndex);
+    pending.push(startIndex);
+
+    size_t reachableCount = 0;
+
+    cout << "BFS starting from " << buildings[startIndex] << ":\n";
+
+    while (!pending.empty())
+    {
+        const int current = pending.front();
+        pending.pop();
+
+        cout << buildings[current] << " - Distance: "
+             << distance[current] << '\n';
+        ++reachableCount;
+
+        for (size_t i = 0; i < neighbors[current].size(); ++i)
+        {
+            const int next = neighbors[current][i];
+
+            // Mark visited when enqueued to avoid duplicate queue entries.
+            if (!visited[next])
+            {
+                visited[next] = true;
+                distance[next] = distance[current] + 1;
+                pending.push(next);
+            }
+        }
+    }
+
+    cout << "Reachable: " << reachableCount << " of "
+         << buildings.size() << " buildings\n";
+}
+
+void CampusGraph::shortestPath(
+    const string& start,
+    const string& destination) const
+{
+    const int startIndex = findBuilding(start);
 
     int reachableCount = 0;
 
@@ -152,7 +210,9 @@ void CampusGraph::bfs(string start) const {
              << " - Distance: "
              << distance[current] << "\n";
 
-        reachableCount++;
+        for (size_t i = 0; i < neighbors[current].size(); ++i)
+        {
+            const int next = neighbors[current][i];
 
         // Explore every neighboring building.
         for (int next : neighbors[current]) {
