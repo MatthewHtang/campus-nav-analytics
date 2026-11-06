@@ -59,34 +59,52 @@ string trim(const string& s){
     return rightTrim(leftTrim(s));
 }
 
-/*
-Split 
+//Build a vector string called split that passes two argument, one
+//the actual text text and delimiter
+vector<string>split(string text, char delimiter){
+    vector<string> result; //This is the list of field we will return
+    string current = ""; //This is where we will be building our string
 
-result = empty list
-current = empty string
-for each character c in text:
-    if c is the delimiter:
-        add current to result
-        reset current to empty
-    else:
-        add c to current
-add current to result      ← this last step keeps "A|B|" as 3 fields
-return result
-*/
+    for (char c : text){    //Look at each character of a text
+        // if the text is the same as our delimiter(|), then add current to the result
+        if (c == delimiter){    
+            result.push_back(current);
+            current = "";
+        }
+        //else, add that character to current
+        else {
+            current += c;
+        }
+    }
+    result.push_back(current); //save the last field
+    return result;  //then return the result
 
-/*
-toUpper/toLower
+}
 
-copy = text
-for each character in copy: convert it with toupper / tolower
-return copy
-*/
+//This function takes one string argument(text) and the 
+//for loop take each character directly from text and 
+// convert it to upper then modify it rightaway using '&' symbol
+string toUpper(string text){
+    for (char& c : text){
+        c = toupper(c);
+    }
+    return text;
+}
 
-/*
-equalsIgnoreCase
+//This function convert upper to lower
+string toLower(string text){
+    for (char& c : text){
+        c = tolower(c);
+    }
+    return text;
+}
 
-return toLower(a) == toLower(b)
-*/
+
+//This function take two string arguments a and b, compare them
+//returns true if they are the same, false if they are not
+bool equalsIgnoreCase(string a, string b){
+    return toLower(a) == toLower(b);
+}
 
 /*
 isValidId (expects an ID that is already trimmed and uppercased)

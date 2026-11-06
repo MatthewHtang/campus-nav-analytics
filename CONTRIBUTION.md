@@ -9,7 +9,7 @@
 ## Summary Table
 | Team Member | Component(s) | Specific Tasks Completed | Testing/Debugging | 
 |-------------|--------------|--------------------------|-------------------|
-| Matthew |• Utils.h<br>•Utils.cpp |  |  |
+| Matthew |• Utils.h<br>•Utils.cpp |• Functions(Trim, Split, toUpper/toLower<br> equalsIgnoreCase)  |  |
 | Alka |  |  |  |  |
 | Sankalp |  |  |  |
 
