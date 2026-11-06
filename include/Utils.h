@@ -11,8 +11,6 @@
  */
 
 
- 
-
  // Add header guard to avoid compiler error
  #ifndef UTILS_H
  #define UTILS_H
