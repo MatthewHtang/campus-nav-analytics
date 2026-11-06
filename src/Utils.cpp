@@ -22,133 +22,119 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <sstream>
 #include <string>
 #include <vector>
 
 using namespace std;
 
-// Whitespace characters: space, tab, newline and carriage return.
-static const string WHITESPACE = " \t\n\r";
-
-// ---------------------------------------------------------------------------
-// Text helpers
-// ---------------------------------------------------------------------------
-
-// Remove whitespace from the beginning of s.
-static string leftTrim(const string& s)
-{
-    size_t start = s.find_first_not_of(WHITESPACE);
-    if (start == string::npos)
-    {
-        return ""; // all whitespace
-    }
-    return s.substr(start);
-}
-
-// Remove whitespace from the end of s.
-static string rightTrim(const string& s)
-{
-    size_t end = s.find_last_not_of(WHITESPACE);
-    if (end == string::npos)
-    {
-        return ""; // all whitespace
-    }
-    return s.substr(0, end + 1);
-}
-
-// Remove whitespace from both ends; the parameter matches Utils.h.
 string trim(string text)
 {
-    return rightTrim(leftTrim(text));
+    const string whitespace = " \t\r\n";
+    const size_t first = text.find_first_not_of(whitespace);
+
+    if (first == string::npos)
+    {
+        return "";
+    }
+
+    const size_t last = text.find_last_not_of(whitespace);
+    return text.substr(first, last - first + 1);
 }
 
-// Split on every delimiter and keep the last field, even if empty.
 vector<string> split(string text, char delimiter)
 {
-    vector<string> result;
-    string current;
-    for (char c : text)
+    vector<string> fields;
+    string field;
+
+    for (size_t i = 0; i < text.size(); ++i)
     {
-        if (c == delimiter)
+        if (text[i] == delimiter)
         {
-            result.push_back(current);
-            current.clear();
+            fields.push_back(field);
+            field.clear();
         }
         else
         {
-            current += c;
+            field += text[i];
         }
     }
-    result.push_back(current);
-    return result;
+
+    // Preserve the last field, including an empty trailing field.
+    fields.push_back(field);
+    return fields;
 }
 
-// Uppercase copy of text.
 string toUpper(string text)
 {
-    for (char& c : text)
+    for (size_t i = 0; i < text.size(); ++i)
     {
-        c = static_cast<char>(toupper(static_cast<unsigned char>(c)));
+        text[i] = static_cast<char>(
+            toupper(static_cast<unsigned char>(text[i])));
     }
+
     return text;
 }
 
-// Lowercase copy of text.
 string toLower(string text)
 {
-    for (char& c : text)
+    for (size_t i = 0; i < text.size(); ++i)
     {
-        c = static_cast<char>(tolower(static_cast<unsigned char>(c)));
+        text[i] = static_cast<char>(
+            tolower(static_cast<unsigned char>(text[i])));
     }
+
     return text;
 }
 
-// True if a and b match while ignoring capitalization.
 bool equalsIgnoreCase(string a, string b)
 {
     return toLower(a) == toLower(b);
 }
 
-// ---------------------------------------------------------------------------
-// Facility IDs
-// ---------------------------------------------------------------------------
-
-// Trim and uppercase an ID so every later step sees the same spelling.
 string normalizeId(const string& id)
 {
     return toUpper(trim(id));
 }
 
-// A valid ID is 'F' plus exactly three digits (input already normalized).
 bool isValidId(string id)
 {
     if (id.size() != 4 || id[0] != 'F')
     {
         return false;
     }
-    for (size_t i = 1; i < 4; i++)
+
+    for (size_t i = 1; i < id.size(); ++i)
     {
         if (id[i] < '0' || id[i] > '9')
         {
             return false;
         }
     }
+
     return true;
 }
 
-// ---------------------------------------------------------------------------
-// File loading
-// ---------------------------------------------------------------------------
-
-// Print a rejection warning with filename, line number and reason.
-void printWarning(const string& filename, int lineNumber, const string& reason)
+void printWarning(
+    const string& filename,
+    int lineNumber,
+    const string& reason)
 {
-    cout << "Warning: " << filename << ", line " << lineNumber << ": "
-         << reason << " - record rejected" << endl;
+    cout << "Warning: " << filename << ", line " << lineNumber
+         << ": " << reason << " - record rejected\n";
 }
 
-// Read a data file line by line (see Utils.h for the full contract).
+void printLoadSummary(
+    const string& filename,
+    int acceptedCount,
+    int rejectedCount)
+{
+    cout << "Load summary: " << filename << ": "
+         << acceptedCount << " accepted, "
+         << rejectedCount << " rejected\n";
+}
+
 bool readRecords(
     string path,
     string filename,
@@ -157,61 +143,73 @@ bool readRecords(
     int& rejectedCount)
 {
     ifstream file(path.c_str());
+
     if (!file.is_open())
     {
-        cout << "Error: cannot open file \"" << filename << "\" (" << path
-             << "). Treating it as empty." << endl;
+        cout << "Error: cannot open file \"" << filename << "\" ("
+             << path << "). Treating it as empty.\n";
         return false;
     }
 
     int lineNumber = 0;
     string line;
+
     while (getline(file, line))
     {
-        lineNumber++;
+        ++lineNumber;
 
-        // Drop a UTF-8 byte-order mark if an editor added one to line 1.
-        if (lineNumber == 1 && line.compare(0, 3, "\xEF\xBB\xBF") == 0)
+        // Remove a UTF-8 byte-order mark if present at the start of the file.
+        if (lineNumber == 1 &&
+            line.compare(0, 3, "\xEF\xBB\xBF") == 0)
         {
             line.erase(0, 3);
         }
 
-        line = trim(line); // also removes the '\r' of Windows line endings
+        line = trim(line);
+
+        // A comment starts only when # is the first non-whitespace character.
         if (line.empty() || line[0] == '#')
         {
-            continue; // blank line or comment line
+            continue;
         }
 
         vector<string> fields = split(line, '|');
-        for (size_t i = 0; i < fields.size(); i++)
+
+        for (size_t i = 0; i < fields.size(); ++i)
         {
             fields[i] = trim(fields[i]);
         }
 
         if (static_cast<int>(fields.size()) != expectedFieldCount)
         {
-            printWarning(filename, lineNumber,
-                         "wrong number of fields (expected " +
-                         to_string(expectedFieldCount) + ", found " +
-                         to_string(fields.size()) + ")");
-            rejectedCount++;
+            printWarning(
+                filename,
+                lineNumber,
+                "wrong number of fields (expected " +
+                    to_string(expectedFieldCount) + ", found " +
+                    to_string(fields.size()) + ")");
+            ++rejectedCount;
             continue;
         }
 
-        size_t emptyPosition = 0;
-        for (size_t i = 0; i < fields.size(); i++)
+        size_t emptyField = fields.size();
+
+        for (size_t i = 0; i < fields.size(); ++i)
         {
             if (fields[i].empty())
             {
-                emptyPosition = i + 1;
+                emptyField = i;
                 break;
             }
         }
-        if (emptyPosition != 0)
+
+        if (emptyField != fields.size())
         {
-            printWarning(filename, lineNumber,
-                         "field " + to_string(emptyPosition) + " is empty");
-            rejectedCount++;
+            printWarning(
+                filename,
+                lineNumber,
+                "field " + to_string(emptyField + 1) + " is empty");
+            ++rejectedCount;
             continue;
         }
 
@@ -220,80 +218,105 @@ bool readRecords(
         record.fields = fields;
         records.push_back(record);
     }
+
     return true;
 }
 
-// ---------------------------------------------------------------------------
-// Reports
-// ---------------------------------------------------------------------------
-
-// "20.0%" style text; 0.0% when total is 0 so we never divide by zero.
 string formatPercent(int count, int total)
 {
-    double percent = (total == 0) ? 0.0 : 100.0 * count / total;
-    ostringstream out;
-    out << fixed << setprecision(1) << percent << "%";
-    return out.str();
+    if (total <= 0)
+    {
+        return "0.0%";
+    }
+
+    ostringstream output;
+    output << fixed << setprecision(1)
+           << (100.0 * count / total) << '%';
+
+    return output.str();
 }
 
-// ---------------------------------------------------------------------------
-// Menu and prompt input
-// ---------------------------------------------------------------------------
-
-// Read one whole line after a prompt; "" for blank input or end of input.
 string promptLine(const string& prompt)
 {
     cout << prompt;
-    if (cin.fail() && !cin.eof())
+    cout.flush();
+
+    string answer;
+
+    if (!getline(cin, answer))
     {
-        cin.clear(); // recover from an earlier failed numeric read
-    }
-    string line;
-    if (!getline(cin, line))
-    {
-        cout << endl; // finish the prompt line at end of input
         return "";
     }
-    return trim(line);
+
+    return trim(answer);
 }
 
-// Read one menu choice; -1 after an error message, eofChoice at end of input.
-int readMenuChoice(const string& prompt, int minChoice, int maxChoice,
-                   int eofChoice)
+int readMenuChoice(
+    const string& prompt,
+    int minChoice,
+    int maxChoice,
+    int eofChoice)
 {
-    cout << prompt;
-    if (cin.fail() && !cin.eof())
+    if (minChoice < 0 || maxChoice < minChoice)
     {
-        cin.clear(); // recover from an earlier failed numeric read
+        cout << "Error: invalid menu choice range.\n";
+        return -1;
     }
-    string line;
-    if (!getline(cin, line))
+
+    cout << prompt;
+    cout.flush();
+
+    string input;
+
+    if (!getline(cin, input))
     {
-        cout << endl; // finish the prompt line at end of input
         return eofChoice;
     }
-    line = trim(line);
 
-    // Digits only (no sign, no letters) and short enough not to overflow.
-    bool valid = !line.empty() && line.size() <= 9;
+    input = trim(input);
+
+    if (input.empty())
+    {
+        cout << "Error: enter a menu choice.\n";
+        return -1;
+    }
+
     int value = 0;
-    for (size_t i = 0; valid && i < line.size(); i++)
+    bool tooLarge = false;
+
+    for (size_t i = 0; i < input.size(); ++i)
     {
-        if (line[i] < '0' || line[i] > '9')
+        const char character = input[i];
+
+        if (character < '0' || character > '9')
         {
-            valid = false;
+            cout << "Error: enter a number from "
+                 << minChoice << " to " << maxChoice << ".\n";
+            return -1;
         }
-        else
+
+        const int digit = character - '0';
+
+        if (!tooLarge)
         {
-            value = value * 10 + (line[i] - '0');
+            if (value >
+                (numeric_limits<int>::max() - digit) / 10)
+            {
+                tooLarge = true;
+            }
+            else
+            {
+                value = value * 10 + digit;
+            }
         }
-    }
-    if (valid && value >= minChoice && value <= maxChoice)
-    {
-        return value;
     }
 
-    cout << "Invalid choice. Please enter a number from " << minChoice
-         << " to " << maxChoice << "." << endl;
-    return -1;
+    if (tooLarge || value < minChoice || value > maxChoice)
+    {
+        cout << "Error: enter a number from "
+             << minChoice << " to " << maxChoice << ".\n";
+        return -1;
+    }
+
+    return value;
 }
