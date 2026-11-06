@@ -9,24 +9,12 @@
 ## Summary Table
 | Team Member | Component(s) | Specific Tasks Completed | Testing/Debugging | 
 |-------------|--------------|--------------------------|-------------------|
-| Matthew |• Utils.h<br>•Utils.cpp |• Functions(Trim, Split, toUpper/toLower<br> equalsIgnoreCase)  |  |
+| Matthew |• Utils.h<br>• Utils.cpp<br>• main.cpp |• Functions(Trim, Split, toUpper/toLower<br> equalsIgnoreCase)  |  |
 | Alka |  |  |  |  |
 | Sankalp |  |  |  |
 
-# GitHub Contributions
-
-## Matthew
-- **09-07-2026** — your comments. [`f92d8c9`](your commit link)
+# [`GitHub Contributions`](https://github.com/MatthewHtang/campus-nav-analytics/commits/main/)
 
 ---
-
-## Sankalp
-- **09-07-2026** — your comments. [`f92d8c9`](your commit link)
-
----
-
-## Alka
-- **09-07-2026** — your comments. [`f92d8c9`](your commit link)
-
 
 - Repository: https://github.com/MatthewHtang/campus-nav-analytics.git

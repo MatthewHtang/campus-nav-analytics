@@ -4,7 +4,15 @@
  * @Last Modified by: Matthew Htang
  * @Last Modified time: 2026-11-05 10:23:31
  * 
- * 
+ * This file contains functions for file loader and cleaner,
+ * The implemented functions in this program load the file, trim, split
+ * and prepare for the next step. functions implemented in this program include:
+ * 1) trim()
+ * 2) split()
+ * 3) toUpper/toLower()
+ * 4) equalsIgnoreCase()
+ * 5) isValidId()
+ * 6) readRecords()
  */
 
 #include "Utils.h"
