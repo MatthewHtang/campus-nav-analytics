@@ -16,8 +16,11 @@
  */
 
 #include "Utils.h"
+#include <cctype>
+#include <fstream>
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
