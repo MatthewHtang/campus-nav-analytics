@@ -1,0 +1,2 @@
+Concise design_document.txt describing the custom hash function, 
+collision strategy, graph representation, and main classes and modules.
