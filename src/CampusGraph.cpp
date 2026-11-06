@@ -1,159 +1,384 @@
+/*
+ * @Author: Sankalp (Member C)
+ * @Date: 2026-11-05
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2026-11-06 13:36:35
+ */
+
 #include "CampusGraph.h"
+#include "Utils.h"
+
+#include <algorithm>
 #include <iostream>
 #include <queue>
-#include <cctype>
+#include <vector>
 
 using namespace std;
 
-// Remove extra spaces from  the beginning and end.
-string trimGraphName(string name) {
-    size_t first = name.find_first_not_of(" \t\r\n");
-
-    if (first == string::npos)//returns empty if the name only has spaces
-        return "";
-
-    size_t last = name.find_last_not_of(" \t\r\n");
-    return name.substr(first, last - first + 1);
+CampusGraph::CampusGraph()
+    : connectionCount(0)
+{
 }
 
-// changes a name to uppercase so that we can compare them easily
-string normalizeGraphName(string name) {
-    name = trimGraphName(name);
+int CampusGraph::findBuilding(const string& name) const
+{
+    const string target = trim(name);
 
-    for (char &letter : name) {
-        letter = toupper(static_cast<unsigned char>(letter));
+    if (target.empty())
+    {
+        return -1;
     }
 
-    return name;
-}
-
-// Find a building's position in our list
-// returns its position if found or -1 if not found
-int CampusGraph::findBuilding(string name) const {
-    string target = normalizeGraphName(name);
-
-    for (int i = 0; i < (int)buildings.size(); i++) {
-        if (normalizeGraphName(buildings[i]) == target)
-            return i;
+    for (size_t i = 0; i < buildings.size(); ++i)
+    {
+        if (equalsIgnoreCase(buildings[i], target))
+        {
+            return static_cast<int>(i);
+        }
     }
 
     return -1;
 }
 
-// Add a building if it is not already present.
-bool CampusGraph::addBuilding(string name) {
-    name = trimGraphName(name);
-
-    if (name.empty() || findBuilding(name) != -1)//donot add an empty or repeated building
-        return false;
-
-    buildings.push_back(name);
-    neighbors.push_back(vector<int>());// make an empty neighbor list for the new building
-
-    return true;
+bool CampusGraph::hasBuilding(const string& name) const
+{
+    return findBuilding(name) != -1;
 }
 
-// connects two buildings together
-bool CampusGraph::addConnection(string first, string second) {
-    int a = findBuilding(first);
-    int b = findBuilding(second);
+bool CampusGraph::addBuilding(const string& name)
+{
+    const string cleanedName = trim(name);
 
-    // Both buildings must exist and cannot be the same
-    if (a == -1 || b == -1 || a == b)
+    if (cleanedName.empty() || hasBuilding(cleanedName))
+    {
         return false;
-
-    //  Checks if buildings are already connected,Reject duplicates, including reversed connections.
-    for (int neighbor : neighbors[a]) {
-        if (neighbor == b)
-            return false;
     }
 
-    neighbors[a].push_back(b);// adds the connection in both directions
-    neighbors[b].push_back(a);
-    connectionCount++;// counts this connection only once.
-
+    buildings.push_back(cleanedName);
+    neighbors.push_back(vector<int>());
     return true;
 }
 
-// Display buildings and their neighbors.
-void CampusGraph::displayGraph() const {
-    if (buildings.empty()) {
+bool CampusGraph::hasConnection(
+    const string& first,
+    const string& second) const
+{
+    const int a = findBuilding(first);
+    const int b = findBuilding(second);
+
+    if (a == -1 || b == -1 || a == b)
+    {
+        return false;
+    }
+
+    for (size_t i = 0; i < neighbors[a].size(); ++i)
+    {
+        if (neighbors[a][i] == b)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool CampusGraph::addConnection(
+    const string& first,
+    const string& second)
+{
+    const int a = findBuilding(first);
+    const int b = findBuilding(second);
+
+    if (a == -1 || b == -1 || a == b ||
+        hasConnection(first, second))
+    {
+        return false;
+    }
+
+    // Store both directions but count the undirected connection once.
+    neighbors[a].push_back(b);
+    neighbors[b].push_back(a);
+    ++connectionCount;
+    return true;
+}
+
+void CampusGraph::displayGraph() const
+{
+    if (buildings.empty())
+    {
         cout << "No buildings available.\n";
         return;
     }
 
-    for (int i = 0; i < (int)buildings.size(); i++) {// Goes through each building
+    for (size_t i = 0; i < buildings.size(); ++i)
+    {
         cout << buildings[i] << ": ";
 
-        if (neighbors[i].empty()) {// checks if the building has any connections
+        if (neighbors[i].empty())
+        {
             cout << "(no connections)";
-        } else {
-            for (int j = 0; j < (int)neighbors[i].size(); j++) {
+        }
+        else
+        {
+            for (size_t j = 0; j < neighbors[i].size(); ++j)
+            {
                 if (j > 0)
+                {
                     cout << ", ";
+                }
 
                 cout << buildings[neighbors[i][j]];
             }
         }
 
-        cout << "\n";
+        cout << '\n';
     }
 }
 
-// Shows the total buildings, connections and degrees
-void CampusGraph::displayStatistics() const {
-    cout << "Total buildings: " << buildings.size() << "\n";
-    cout << "Total connections: " << connectionCount << "\n";
+void CampusGraph::displayStatistics() const
+{
+    cout << "Total buildings: " << buildings.size() << '\n';
+    cout << "Total connections: " << connectionCount << '\n';
 
-    for (int i = 0; i < (int)buildings.size(); i++) {// Degrees means how many connections a building has
-        cout << buildings[i]
-             << " - Degree: "
-             << neighbors[i].size() << "\n";
+    for (size_t i = 0; i < buildings.size(); ++i)
+    {
+        cout << buildings[i] << " - Degree: "
+             << neighbors[i].size() << '\n';
     }
 }
 
-// Breadth-First Search using BFS to find all buildings we can reach from a start
-void CampusGraph::bfs(string start) const {
-    int startIndex = findBuilding(start);// finding the starting building
+void CampusGraph::displayConnectivityReport() const
+{
+    cout << "Campus connectivity report:\n";
+    cout << "Total buildings: " << buildings.size() << '\n';
+    cout << "Total connections: " << connectionCount << '\n';
 
-    if (startIndex == -1) {// Stoping if the building doesnot exist
-        cout << "Error: Unknown building.\n";
+    if (buildings.empty())
+    {
+        cout << "Highest degree: 0\n";
+        cout << "Buildings with highest degree: None\n";
+        cout << "Isolated buildings: None\n";
+        cout << "Connected components: 0\n";
         return;
     }
 
-    vector<bool> visited(buildings.size(), false);// Keeps the tract of buildings we have already found
-    vector<int> distance(buildings.size(), -1);// stores how many connections awayeach building is
-    queue<int> q;// queue stores buildings waiting to be explored
+    size_t highestDegree = 0;
 
-    visited[startIndex] = true;// starting with 1 st building
-    distance[startIndex] = 0;
-    q.push(startIndex);
+    for (size_t i = 0; i < neighbors.size(); ++i)
+    {
+        if (neighbors[i].size() > highestDegree)
+        {
+            highestDegree = neighbors[i].size();
+        }
+    }
 
-    int reachableCount = 0;// count how many building we can reach
+    cout << "Highest degree: " << highestDegree << '\n';
+    cout << "Buildings with highest degree: ";
 
-    cout << "BFS starting from "
-         << buildings[startIndex] << ":\n";
+    bool firstLeader = true;
 
-    while (!q.empty()) {// keep going untilthere are no more buildings to visit
-        int current = q.front();// Get the first building from the queue
-        q.pop();
+    for (size_t i = 0; i < buildings.size(); ++i)
+    {
+        if (neighbors[i].size() == highestDegree)
+        {
+            if (!firstLeader)
+            {
+                cout << ", ";
+            }
 
-        cout << buildings[current]// show the building and its distance
-             << " - Distance: "
-             << distance[current] << "\n";
+            cout << buildings[i];
+            firstLeader = false;
+        }
+    }
 
-        reachableCount++;
+    cout << '\n';
+    cout << "Isolated buildings: ";
 
-        for (int next : neighbors[current]) {// checking every building connected to this one.
-            if (!visited[next]) {// only visit buildings we have not found yet.
-                visited[next] = true;
-                distance[next] = distance[current] + 1;// the next building is one connectionfarther
-                q.push(next);// adds it to the queue to explore later
+    bool foundIsolated = false;
+
+    for (size_t i = 0; i < buildings.size(); ++i)
+    {
+        if (neighbors[i].empty())
+        {
+            if (foundIsolated)
+            {
+                cout << ", ";
+            }
+
+            cout << buildings[i];
+            foundIsolated = true;
+        }
+    }
+
+    if (!foundIsolated)
+    {
+        cout << "None";
+    }
+
+    cout << '\n';
+
+    // Traverse each not-yet-visited building to count components.
+    vector<bool> visited(buildings.size(), false);
+    size_t componentCount = 0;
+
+    for (size_t start = 0; start < buildings.size(); ++start)
+    {
+        if (visited[start])
+        {
+            continue;
+        }
+
+        ++componentCount;
+
+        queue<int> pending;
+        visited[start] = true;
+        pending.push(static_cast<int>(start));
+
+        while (!pending.empty())
+        {
+            const int current = pending.front();
+            pending.pop();
+
+            for (size_t i = 0; i < neighbors[current].size(); ++i)
+            {
+                const int next = neighbors[current][i];
+
+                if (!visited[next])
+                {
+                    visited[next] = true;
+                    pending.push(next);
+                }
             }
         }
     }
 
-    cout << "Reachable: " << reachableCount// show how many buildings were reachable
-         << " of " << buildings.size()
-         << " buildings\n";
+    cout << "Connected components: " << componentCount << '\n';
+}
+
+void CampusGraph::bfs(const string& start) const
+{
+    const int startIndex = findBuilding(start);
+
+    if (startIndex == -1)
+    {
+        cout << "Error: Unknown building \"" << trim(start) << "\".\n";
+        return;
+    }
+
+    vector<bool> visited(buildings.size(), false);
+    vector<int> distance(buildings.size(), -1);
+    queue<int> pending;
+
+    visited[startIndex] = true;
+    distance[startIndex] = 0;
+    pending.push(startIndex);
+
+    size_t reachableCount = 0;
+
+    cout << "BFS starting from " << buildings[startIndex] << ":\n";
+
+    while (!pending.empty())
+    {
+        const int current = pending.front();
+        pending.pop();
+
+        cout << buildings[current] << " - Distance: "
+             << distance[current] << '\n';
+        ++reachableCount;
+
+        for (size_t i = 0; i < neighbors[current].size(); ++i)
+        {
+            const int next = neighbors[current][i];
+
+            // Mark visited when enqueued to avoid duplicate queue entries.
+            if (!visited[next])
+            {
+                visited[next] = true;
+                distance[next] = distance[current] + 1;
+                pending.push(next);
+            }
+        }
+    }
+
+    cout << "Reachable: " << reachableCount << " of "
+         << buildings.size() << " buildings\n";
+}
+
+void CampusGraph::shortestPath(
+    const string& start,
+    const string& destination) const
+{
+    const int startIndex = findBuilding(start);
+
+    if (startIndex == -1)
+    {
+        cout << "Error: Unknown starting building \""
+             << trim(start) << "\".\n";
+        return;
+    }
+
+    const int destinationIndex = findBuilding(destination);
+
+    if (destinationIndex == -1)
+    {
+        cout << "Error: Unknown destination building \""
+             << trim(destination) << "\".\n";
+        return;
+    }
+
+    vector<bool> visited(buildings.size(), false);
+    vector<int> parent(buildings.size(), -1);
+    vector<int> distance(buildings.size(), -1);
+    queue<int> pending;
+
+    visited[startIndex] = true;
+    distance[startIndex] = 0;
+    pending.push(startIndex);
+
+    while (!pending.empty() && !visited[destinationIndex])
+    {
+        const int current = pending.front();
+        pending.pop();
+
+        for (size_t i = 0; i < neighbors[current].size(); ++i)
+        {
+            const int next = neighbors[current][i];
+
+            if (!visited[next])
+            {
+                visited[next] = true;
+                parent[next] = current;
+                distance[next] = distance[current] + 1;
+                pending.push(next);
+            }
+        }
+    }
+
+    if (!visited[destinationIndex])
+    {
+        cout << "No path exists from " << buildings[startIndex]
+             << " to " << buildings[destinationIndex] << ".\n";
+        return;
+    }
+
+    vector<int> path;
+
+    for (int current = destinationIndex;
+         current != -1;
+         current = parent[current])
+    {
+        path.push_back(current);
+    }
+
+    reverse(path.begin(), path.end());
+
+    cout << "Shortest path from " << buildings[startIndex]
+         << " to " << buildings[destinationIndex]
+         << " (" << distance[destinationIndex]
+         << " connections):\n";
+
+    for (size_t i = 0; i < path.size(); ++i)
+    {
+        cout << buildings[path[i]] << '\n';
+    }
 }
