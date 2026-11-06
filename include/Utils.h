@@ -1,21 +1,22 @@
 /*
  * @Author: Matthew Htang
- * @Date: 2026-11-05 10:08:45 
- * @Last Modified by: Matthew Htang
- * @Last Modified time: 2026-11-05 10:09:05
- * 
- * This file contain a blue print for the data cleaner.
- * The following impplemented function include; 
- * triming, spliting, toUpper, toLower, equalsIgnoreCase, 
- * isValidId and read the record
+ * @Date: 2026-11-05 10:08:45
+ * @Last Modified by: Sankalp (Member C)
+ * @Last Modified time: 2026-11-06
+ *
+ * Purpose: Declares the shared helpers used by every module: text cleaning
+ *   (trim, split, case conversion and comparison), ID checks, the common file
+ *   reader and warning printer used by all four loaders, a percentage
+ *   formatter for the category report, and menu input helpers that recover
+ *   from blank, text and out-of-range input.
+ *
+ * Credit: trim, split, toUpper, toLower, equalsIgnoreCase and the original
+ *   function list by Matthew Htang (Member A); completed by Sankalp (Member C).
  */
 
-
- 
-
- // Add header guard to avoid compiler error
- #ifndef UTILS_H
- #define UTILS_H
+// Header guard to avoid double inclusion
+#ifndef UTILS_H
+#define UTILS_H
 
 #include <string>
 #include <vector>
@@ -86,7 +87,7 @@ bool readRecords(
 );
 
 // ---------------------------------------------------------------------------
-// Reports (Member A)
+// Reports (Member A, Final)
 // ---------------------------------------------------------------------------
 
 // Percentage of count out of total with one decimal place, e.g. "20.0%".

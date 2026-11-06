@@ -2,23 +2,18 @@
  * @Author: Matthew Htang
  * @Date: 2026-11-05 10:07:02
  * @Last Modified by: Sankalp (Member C)
- * @Last Modified time: 2026-11-05
+ * @Last Modified time: 2026-11-06
  *
- * This file contains functions for file loader and cleaner,
- * The implemented functions in this program load the file, trim, split
- * and prepare for the next step. functions implemented in this program include:
- * 1) trim()
- * 2) split()
- * 3) toUpper/toLower()
- * 4) equalsIgnoreCase()
- * 5) isValidId()
- * 6) readRecords()
+ * Purpose: Implements the shared helpers declared in Utils.h: text cleaning,
+ *   ID normalization and validation, the common data-file reader and warning
+ *   printer, the percentage formatter, and menu input helpers.
  *
- * Credit: trim, split, toUpper, toLower and equalsIgnoreCase by Matthew Htang
- * (Member A). isValidId and readRecords completed by Sankalp (Member C).
- * Change to Matthew's code: trim() now takes "string text" so that it matches
- * its declaration in Utils.h (it was "const string&", which left the declared
- * trim(string) undefined at link time).
+ * Credit: trim (leftTrim/rightTrim), split, toUpper, toLower and
+ *   equalsIgnoreCase by Matthew Htang (Member A); everything else and the
+ *   final version by Sankalp (Member C). Changes to Matthew's code: trim()
+ *   now matches its declaration in Utils.h (it was "const string&", which
+ *   left the declared trim(string) undefined at link time), and the case
+ *   functions cast to unsigned char so non-ASCII bytes are safe.
  */
 
 #include "Utils.h"
@@ -62,11 +57,9 @@ static string rightTrim(const string& s)
     return s.substr(0, end + 1);
 }
 
-//Remove WHITESPACES from both side
-//This return the fully trimed of a string
-//First, left trim first and then right trim, then return
-//The parameter is "string text" to match the declaration in Utils.h
-string trim(string text){
+// Remove whitespace from both ends; the parameter matches Utils.h.
+string trim(string text)
+{
     return rightTrim(leftTrim(text));
 }
 
@@ -117,42 +110,45 @@ bool equalsIgnoreCase(string a, string b)
     return toLower(a) == toLower(b);
 }
 
-//isValidId expects an ID that is already trimmed and uppercased.
-//A valid ID is the letter F followed by exactly three digits, like F001.
-//Callers must run trim() and toUpper() first, so "f001" is rejected here.
-bool isValidId(string id){
-    //length must be exactly 4 and the first character must be 'F'
-    if (id.size() != 4 || id[0] != 'F'){
+// ---------------------------------------------------------------------------
+// Facility IDs
+// ---------------------------------------------------------------------------
+
+// Trim and uppercase an ID so every later step sees the same spelling.
+string normalizeId(const string& id)
+{
+    return toUpper(trim(id));
+}
+
+// A valid ID is 'F' plus exactly three digits (input already normalized).
+bool isValidId(string id)
+{
+    if (id.size() != 4 || id[0] != 'F')
+    {
         return false;
     }
-
-    //characters 1 to 3 must all be digits
-    for (size_t i = 1; i < 4; i++){
-        if (id[i] < '0' || id[i] > '9'){
+    for (size_t i = 1; i < 4; i++)
+    {
+        if (id[i] < '0' || id[i] > '9')
+        {
             return false;
         }
     }
     return true;
 }
 
-//Print one rejection warning: filename, line number and the reason.
-//Only used inside this file, so it is not declared in Utils.h.
-static void printRejection(const string& filename, int lineNumber, const string& reason){
+// ---------------------------------------------------------------------------
+// File loading
+// ---------------------------------------------------------------------------
+
+// Print a rejection warning with filename, line number and reason.
+void printWarning(const string& filename, int lineNumber, const string& reason)
+{
     cout << "Warning: " << filename << ", line " << lineNumber << ": "
          << reason << " - record rejected" << endl;
 }
 
-//readRecords is the shared filter used to load all four data files.
-//- Returns false (after printing an error naming the file) if it cannot be
-//  opened; the caller then treats the file as empty.
-//- Blank lines and comment lines (first non-space character is '#') are
-//  skipped. A '#' later in a line is ordinary text, like "Room #5".
-//- Each line is read whole with getline, trimmed (this also removes the '\r'
-//  of Windows line endings) and split on '|'; every field is trimmed.
-//- A line with the wrong number of fields or an empty field is rejected with
-//  a warning (filename, line number, reason) and counted in rejectedCount.
-//  rejectedCount is added to, not reset, so the caller should start it at 0.
-//- Each accepted line is appended to records with its real line number.
+// Read a data file line by line (see Utils.h for the full contract).
 bool readRecords(
     string path,
     string filename,
@@ -161,7 +157,8 @@ bool readRecords(
     int& rejectedCount)
 {
     ifstream file(path.c_str());
-    if (!file.is_open()){
+    if (!file.is_open())
+    {
         cout << "Error: cannot open file \"" << filename << "\" (" << path
              << "). Treating it as empty." << endl;
         return false;
@@ -169,48 +166,52 @@ bool readRecords(
 
     int lineNumber = 0;
     string line;
-    while (getline(file, line)){
-        lineNumber += 1;
+    while (getline(file, line))
+    {
+        lineNumber++;
 
-        //Drop a UTF-8 byte-order mark if an editor added one to the first line
-        if (lineNumber == 1 && line.compare(0, 3, "\xEF\xBB\xBF") == 0){
+        // Drop a UTF-8 byte-order mark if an editor added one to line 1.
+        if (lineNumber == 1 && line.compare(0, 3, "\xEF\xBB\xBF") == 0)
+        {
             line.erase(0, 3);
         }
 
-        line = trim(line);
-        if (line.empty() || line[0] == '#'){
-            continue;
+        line = trim(line); // also removes the '\r' of Windows line endings
+        if (line.empty() || line[0] == '#')
+        {
+            continue; // blank line or comment line
         }
 
         vector<string> fields = split(line, '|');
-        for (size_t i = 0; i < fields.size(); i++){
+        for (size_t i = 0; i < fields.size(); i++)
+        {
             fields[i] = trim(fields[i]);
         }
 
-        //Wrong number of fields
-        if (static_cast<int>(fields.size()) != expectedFieldCount){
-            printRejection(filename, lineNumber,
-                           "wrong number of fields (expected " +
-                           to_string(expectedFieldCount) + ", found " +
-                           to_string(fields.size()) + ")");
-            rejectedCount += 1;
+        if (static_cast<int>(fields.size()) != expectedFieldCount)
+        {
+            printWarning(filename, lineNumber,
+                         "wrong number of fields (expected " +
+                         to_string(expectedFieldCount) + ", found " +
+                         to_string(fields.size()) + ")");
+            rejectedCount++;
             continue;
         }
 
-        //Any empty required field
-        bool hasEmptyField = false;
         size_t emptyPosition = 0;
-        for (size_t i = 0; i < fields.size(); i++){
-            if (fields[i].empty()){
-                hasEmptyField = true;
+        for (size_t i = 0; i < fields.size(); i++)
+        {
+            if (fields[i].empty())
+            {
                 emptyPosition = i + 1;
                 break;
             }
         }
-        if (hasEmptyField){
-            printRejection(filename, lineNumber,
-                           "field " + to_string(emptyPosition) + " is empty");
-            rejectedCount += 1;
+        if (emptyPosition != 0)
+        {
+            printWarning(filename, lineNumber,
+                         "field " + to_string(emptyPosition) + " is empty");
+            rejectedCount++;
             continue;
         }
 
@@ -220,4 +221,79 @@ bool readRecords(
         records.push_back(record);
     }
     return true;
+}
+
+// ---------------------------------------------------------------------------
+// Reports
+// ---------------------------------------------------------------------------
+
+// "20.0%" style text; 0.0% when total is 0 so we never divide by zero.
+string formatPercent(int count, int total)
+{
+    double percent = (total == 0) ? 0.0 : 100.0 * count / total;
+    ostringstream out;
+    out << fixed << setprecision(1) << percent << "%";
+    return out.str();
+}
+
+// ---------------------------------------------------------------------------
+// Menu and prompt input
+// ---------------------------------------------------------------------------
+
+// Read one whole line after a prompt; "" for blank input or end of input.
+string promptLine(const string& prompt)
+{
+    cout << prompt;
+    if (cin.fail() && !cin.eof())
+    {
+        cin.clear(); // recover from an earlier failed numeric read
+    }
+    string line;
+    if (!getline(cin, line))
+    {
+        cout << endl; // finish the prompt line at end of input
+        return "";
+    }
+    return trim(line);
+}
+
+// Read one menu choice; -1 after an error message, eofChoice at end of input.
+int readMenuChoice(const string& prompt, int minChoice, int maxChoice,
+                   int eofChoice)
+{
+    cout << prompt;
+    if (cin.fail() && !cin.eof())
+    {
+        cin.clear(); // recover from an earlier failed numeric read
+    }
+    string line;
+    if (!getline(cin, line))
+    {
+        cout << endl; // finish the prompt line at end of input
+        return eofChoice;
+    }
+    line = trim(line);
+
+    // Digits only (no sign, no letters) and short enough not to overflow.
+    bool valid = !line.empty() && line.size() <= 9;
+    int value = 0;
+    for (size_t i = 0; valid && i < line.size(); i++)
+    {
+        if (line[i] < '0' || line[i] > '9')
+        {
+            valid = false;
+        }
+        else
+        {
+            value = value * 10 + (line[i] - '0');
+        }
+    }
+    if (valid && value >= minChoice && value <= maxChoice)
+    {
+        return value;
+    }
+
+    cout << "Invalid choice. Please enter a number from " << minChoice
+         << " to " << maxChoice << "." << endl;
+    return -1;
 }
