@@ -13,7 +13,7 @@
 | Alka |  |  |  |  |
 | Sankalp |  |  |  |
 
-# [`GitHub Contributions`](https://github.com/MatthewHtang/campus-nav-analytics/commits/main/)
+[`GitHub Contributions`](https://github.com/MatthewHtang/campus-nav-analytics/commits/main/)
 
 ---
 
