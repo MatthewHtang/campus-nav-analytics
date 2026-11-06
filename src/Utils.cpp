@@ -1,24 +1,19 @@
 /*
  * @Author: @MatthewHtang
  * @Date: 2026-11-05 10:07:02
- * @last Modified by: Sankalp (Member C)
- * @Last Modified time: 2026-11-06 10:07:24
+ * @Last Modified by: Sankalp (Member C)
+ * @Last Modified time: 2026-11-06
  *
- * This file contains functions for file loader and cleaner,
- * The implemented functions in this program load the file, trim, split
- * and prepare for the next step. functions implemented in this program include:
- * 1) trim()
- * 2) split()
- * 3) toUpper/toLower()
- * 4) equalsIgnoreCase()
- * 5) isValidId()
- * 6) readRecords()
+ * Purpose: Implements the shared helpers declared in Utils.h: text cleaning,
+ *   ID normalization and validation, the common data-file reader and warning
+ *   printer, the percentage formatter, and menu input helpers.
  *
- * Credit: trim, split, toUpper, toLower and equalsIgnoreCase by Matthew Htang
- * (Member A). isValidId and readRecords completed by Sankalp (Member C).
- * Change to Matthew's code: trim() now takes "string text" so that it matches
- * its declaration in Utils.h (it was "const string&", which left the declared
- * trim(string) undefined at link time).
+ * Credit: trim (leftTrim/rightTrim), split, toUpper, toLower and
+ *   equalsIgnoreCase by Matthew Htang (Member A); everything else and the
+ *   final version by Sankalp (Member C). Changes to Matthew's code: trim()
+ *   now matches its declaration in Utils.h (it was "const string&", which
+ *   left the declared trim(string) undefined at link time), and the case
+ *   functions cast to unsigned char so non-ASCII bytes are safe.
  */
 
 #include "Utils.h"
@@ -27,132 +22,119 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <sstream>
 #include <string>
 #include <vector>
 
 using namespace std;
 
-// Whitespace characters: space, tab, newline and carriage return.
-static const string WHITESPACE = " \t\n\r";
-
-// ---------------------------------------------------------------------------
-// Text helpers
-// ---------------------------------------------------------------------------
-
-// Remove whitespace from the beginning of s.
-static string leftTrim(const string& s)
+string trim(string text)
 {
-    size_t start = s.find_first_not_of(WHITESPACE);
-    if (start == string::npos)
+    const string whitespace = " \t\r\n";
+    const size_t first = text.find_first_not_of(whitespace);
+
+    if (first == string::npos)
     {
-        return ""; // all whitespace
+        return "";
     }
-    return s.substr(start);
+
+    const size_t last = text.find_last_not_of(whitespace);
+    return text.substr(first, last - first + 1);
 }
 
-// Remove whitespace from the end of s.
-static string rightTrim(const string& s)
-{
-    size_t end = s.find_last_not_of(WHITESPACE);
-    if (end == string::npos)
-    {
-        return ""; // all whitespace
-    }
-    return s.substr(0, end + 1);
-}
-
-//Remove WHITESPACES from both side
-//This return the fully trimed of a string
-//First, left trim first and then right trim, then return
-//The parameter is "string text" to match the declaration in Utils.h
-string trim(string text){
-    return rightTrim(leftTrim(text));
-}
-
-// Split on every delimiter and keep the last field, even if empty.
 vector<string> split(string text, char delimiter)
 {
-    vector<string> result;
-    string current;
-    for (char c : text)
+    vector<string> fields;
+    string field;
+
+    for (size_t i = 0; i < text.size(); ++i)
     {
-        if (c == delimiter)
+        if (text[i] == delimiter)
         {
-            result.push_back(current);
-            current.clear();
+            fields.push_back(field);
+            field.clear();
         }
         else
         {
-            current += c;
+            field += text[i];
         }
     }
-    result.push_back(current);
-    return result;
+
+    // Preserve the last field, including an empty trailing field.
+    fields.push_back(field);
+    return fields;
 }
 
-// Uppercase copy of text.
 string toUpper(string text)
 {
-    for (char& c : text)
+    for (size_t i = 0; i < text.size(); ++i)
     {
-        c = static_cast<char>(toupper(static_cast<unsigned char>(c)));
+        text[i] = static_cast<char>(
+            toupper(static_cast<unsigned char>(text[i])));
     }
+
     return text;
 }
 
-// Lowercase copy of text.
 string toLower(string text)
 {
-    for (char& c : text)
+    for (size_t i = 0; i < text.size(); ++i)
     {
-        c = static_cast<char>(tolower(static_cast<unsigned char>(c)));
+        text[i] = static_cast<char>(
+            tolower(static_cast<unsigned char>(text[i])));
     }
+
     return text;
 }
 
-// True if a and b match while ignoring capitalization.
 bool equalsIgnoreCase(string a, string b)
 {
     return toLower(a) == toLower(b);
 }
 
-//isValidId expects an ID that is already trimmed and uppercased.
-//A valid ID is the letter F followed by exactly three digits, like F001.
-//Callers must run trim() and toUpper() first, so "f001" is rejected here.
-bool isValidId(string id){
-    //length must be exactly 4 and the first character must be 'F'
-    if (id.size() != 4 || id[0] != 'F'){
+string normalizeId(const string& id)
+{
+    return toUpper(trim(id));
+}
+
+bool isValidId(string id)
+{
+    if (id.size() != 4 || id[0] != 'F')
+    {
         return false;
     }
 
-    //characters 1 to 3 must all be digits
-    for (size_t i = 1; i < 4; i++){
-        if (id[i] < '0' || id[i] > '9'){
+    for (size_t i = 1; i < id.size(); ++i)
+    {
+        if (id[i] < '0' || id[i] > '9')
+        {
             return false;
         }
     }
+
     return true;
 }
 
-//Print one rejection warning: filename, line number and the reason.
-//Only used inside this file, so it is not declared in Utils.h.
-static void printRejection(const string& filename, int lineNumber, const string& reason){
-    cout << "Warning: " << filename << ", line " << lineNumber << ": "
-         << reason << " - record rejected" << endl;
+void printWarning(
+    const string& filename,
+    int lineNumber,
+    const string& reason)
+{
+    cout << "Warning: " << filename << ", line " << lineNumber
+         << ": " << reason << " - record rejected\n";
 }
 
-//readRecords is the shared filter used to load all four data files.
-//- Returns false (after printing an error naming the file) if it cannot be
-//  opened; the caller then treats the file as empty.
-//- Blank lines and comment lines (first non-space character is '#') are
-//  skipped. A '#' later in a line is ordinary text, like "Room #5".
-//- Each line is read whole with getline, trimmed (this also removes the '\r'
-//  of Windows line endings) and split on '|'; every field is trimmed.
-//- A line with the wrong number of fields or an empty field is rejected with
-//  a warning (filename, line number, reason) and counted in rejectedCount.
-//  rejectedCount is added to, not reset, so the caller should start it at 0.
-//- Each accepted line is appended to records with its real line number.
+void printLoadSummary(
+    const string& filename,
+    int acceptedCount,
+    int rejectedCount)
+{
+    cout << "Load summary: " << filename << ": "
+         << acceptedCount << " accepted, "
+         << rejectedCount << " rejected\n";
+}
+
 bool readRecords(
     string path,
     string filename,
@@ -161,56 +143,73 @@ bool readRecords(
     int& rejectedCount)
 {
     ifstream file(path.c_str());
-    if (!file.is_open()){
-        cout << "Error: cannot open file \"" << filename << "\" (" << path
-             << "). Treating it as empty." << endl;
+
+    if (!file.is_open())
+    {
+        cout << "Error: cannot open file \"" << filename << "\" ("
+             << path << "). Treating it as empty.\n";
         return false;
     }
 
     int lineNumber = 0;
     string line;
-    while (getline(file, line)){
-        lineNumber += 1;
 
-        //Drop a UTF-8 byte-order mark if an editor added one to the first line
-        if (lineNumber == 1 && line.compare(0, 3, "\xEF\xBB\xBF") == 0){
+    while (getline(file, line))
+    {
+        ++lineNumber;
+
+        // Remove a UTF-8 byte-order mark if present at the start of the file.
+        if (lineNumber == 1 &&
+            line.compare(0, 3, "\xEF\xBB\xBF") == 0)
+        {
             line.erase(0, 3);
         }
 
         line = trim(line);
-        if (line.empty() || line[0] == '#'){
+
+        // A comment starts only when # is the first non-whitespace character.
+        if (line.empty() || line[0] == '#')
+        {
             continue;
         }
 
         vector<string> fields = split(line, '|');
-        for (size_t i = 0; i < fields.size(); i++){
+
+        for (size_t i = 0; i < fields.size(); ++i)
+        {
             fields[i] = trim(fields[i]);
         }
 
-        //Wrong number of fields
-        if (static_cast<int>(fields.size()) != expectedFieldCount){
-            printRejection(filename, lineNumber,
-                           "wrong number of fields (expected " +
-                           to_string(expectedFieldCount) + ", found " +
-                           to_string(fields.size()) + ")");
-            rejectedCount += 1;
+        if (static_cast<int>(fields.size()) != expectedFieldCount)
+        {
+            printWarning(
+                filename,
+                lineNumber,
+                "wrong number of fields (expected " +
+                    to_string(expectedFieldCount) + ", found " +
+                    to_string(fields.size()) + ")");
+            ++rejectedCount;
             continue;
         }
 
-        //Any empty required field
-        bool hasEmptyField = false;
-        size_t emptyPosition = 0;
-        for (size_t i = 0; i < fields.size(); i++){
-            if (fields[i].empty()){
-                hasEmptyField = true;
-                emptyPosition = i + 1;
+        size_t emptyField = fields.size();
+
+        for (size_t i = 0; i < fields.size(); ++i)
+        {
+            if (fields[i].empty())
+            {
+                emptyField = i;
                 break;
             }
         }
-        if (hasEmptyField){
-            printRejection(filename, lineNumber,
-                           "field " + to_string(emptyPosition) + " is empty");
-            rejectedCount += 1;
+
+        if (emptyField != fields.size())
+        {
+            printWarning(
+                filename,
+                lineNumber,
+                "field " + to_string(emptyField + 1) + " is empty");
+            ++rejectedCount;
             continue;
         }
 
@@ -219,5 +218,105 @@ bool readRecords(
         record.fields = fields;
         records.push_back(record);
     }
+
     return true;
+}
+
+string formatPercent(int count, int total)
+{
+    if (total <= 0)
+    {
+        return "0.0%";
+    }
+
+    ostringstream output;
+    output << fixed << setprecision(1)
+           << (100.0 * count / total) << '%';
+
+    return output.str();
+}
+
+string promptLine(const string& prompt)
+{
+    cout << prompt;
+    cout.flush();
+
+    string answer;
+
+    if (!getline(cin, answer))
+    {
+        return "";
+    }
+
+    return trim(answer);
+}
+
+int readMenuChoice(
+    const string& prompt,
+    int minChoice,
+    int maxChoice,
+    int eofChoice)
+{
+    if (minChoice < 0 || maxChoice < minChoice)
+    {
+        cout << "Error: invalid menu choice range.\n";
+        return -1;
+    }
+
+    cout << prompt;
+    cout.flush();
+
+    string input;
+
+    if (!getline(cin, input))
+    {
+        return eofChoice;
+    }
+
+    input = trim(input);
+
+    if (input.empty())
+    {
+        cout << "Error: enter a menu choice.\n";
+        return -1;
+    }
+
+    int value = 0;
+    bool tooLarge = false;
+
+    for (size_t i = 0; i < input.size(); ++i)
+    {
+        const char character = input[i];
+
+        if (character < '0' || character > '9')
+        {
+            cout << "Error: enter a number from "
+                 << minChoice << " to " << maxChoice << ".\n";
+            return -1;
+        }
+
+        const int digit = character - '0';
+
+        if (!tooLarge)
+        {
+            if (value >
+                (numeric_limits<int>::max() - digit) / 10)
+            {
+                tooLarge = true;
+            }
+            else
+            {
+                value = value * 10 + digit;
+            }
+        }
+    }
+
+    if (tooLarge || value < minChoice || value > maxChoice)
+    {
+        cout << "Error: enter a number from "
+             << minChoice << " to " << maxChoice << ".\n";
+        return -1;
+    }
+
+    return value;
 }
