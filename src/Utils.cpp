@@ -1,8 +1,8 @@
 /*
- * @Author: Matthew Htang
+ * @Author: @MatthewHtang
  * @Date: 2026-11-05 10:07:02
- * @Last Modified by: Sankalp (Member C)
- * @Last Modified time: 2026-11-05
+ * @last Modified by: Sankalp (Member C)
+ * @Last Modified time: 2026-11-06 10:07:24
  *
  * This file contains functions for file loader and cleaner,
  * The implemented functions in this program load the file, trim, split
