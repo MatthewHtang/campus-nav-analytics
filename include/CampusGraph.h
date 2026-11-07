@@ -1,8 +1,10 @@
 /*
  * @Author: Sankalp (Member C)
  * @Date: 2026-11-06 13:37:20 
- * @Last Modified by: Sankalp (Member C)
- * @Last Modified time: 2026-11-06 13:40:24
+ * @Last Modified time: 2026-11-06 19:28:49
+ * 
+ * @MatthewHtang has moved findBuilding from provate to public because it cannot be accessed in
+ * FacilityDatabase.
  */
 
 #ifndef CAMPUSGRAPH_H
@@ -21,8 +23,6 @@ private:
     vector<vector<int> > neighbors;
     size_t connectionCount;
 
-    // Find a building, ignoring capitalization and outer whitespace.
-    int findBuilding(const string& name) const;
 
 public:
     CampusGraph();
@@ -53,6 +53,9 @@ public:
     void shortestPath(
         const string& start,
         const string& destination) const;
+
+    // Find a building, ignoring capitalization and outer whitespace.
+    string findBuilding(const string& name) const;
 };
 
 #endif
