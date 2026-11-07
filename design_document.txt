@@ -1,2 +1,40 @@
-Concise design_document.txt describing the custom hash function, 
-collision strategy, graph representation, and main classes and modules.
+Matthew:
+1) Hash function
+
+Before hashing, the raw facility id (f101) is first trimmed and convert it to
+upper case. So, "f101" become "F101". Then, when its ready it simply apply to the hash function.
+For building a customize hash function, I use sperate chain method which is one of the
+solution to solve collision. And the formula I use for the hash function is 
+
+h = (h * 31 + c) % capacity, 
+
+where h is the running hash value which is initially zero. Multiply by 31 makes the position
+of each character matter so that facility id such as F012 and F021 lands in different buckets.
+c is the current character of a key,in our case its a facility id such as F001, F103 etc in ASCII code. 
+Capacity is initialized as 11, because prime number spread the key more evenly. The modulus is basically 
+a way to keeps the index between 0 and capacity − 1.
+
+2) The collision strategy: sperate chaining
+As mentioned above, the strategy I use for this collision is to use sperate chaining (open hashing). In 
+sperate chaining, each bucket holds a small collection of (linked list) of the keys that is hash to it.
+In the HashTable header file, you may notice "std::vector<std::vector<Entry>> buckets". Its basically
+saying that the outer vector is the row of buckets, and each inner vector is one bucket's chain. Each Entry stores
+the facility ID and that facility's index in the facilities vector. The reason why sperate chaining is preferable in 
+this hash function is that, unlike linear probing, the table never fills up, the incoming keys are all properly added 
+as a linked list in the table. 
+
+3) How collisions are counted
+The way the collision are count in the function is that when the bucket is not empty and its already occupied,
+collisionCount ++.
+
+4) Capacity
+The table has 11 buckets. 11 is prime, which is prime and it helps spread keys evenly. The capacity limits the number of buckets,
+not the number of facilities, because chains grow, and there is no maximun number of facilities, so the table is never full. Resizing 
+is not implemented, except for one condition. In the code I added one line in HashTable.cpp, "buckets.resize(this->capacity);" it will
+resize the table as 1 if the table is empty.
+
+5) classes
+There are three main classes in this program. Facility: has four fields, id, name, building, category,
+and get those fileds. HashTable contain a hash function, a hash table itself, a method to insert, find, get capacity,
+getEntryCount, and getCollisionCount. The class FacilityDatabase is basically a manager that manages facility, hash table. 
+It also load the file, display all the facilities, search by their id and also get the count value. 

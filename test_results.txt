@@ -1,0 +1,15 @@
+TEST RESULTS - Milestone 1
+Member A (Matthew Htang): Hash table and ID search
+
+#  | Test                | Input              | Expected                        | Actual | Pass/Fail
+---+---------------------+--------------------+---------------------------------+--------+----------
+1  | Load sample data    | ./campus           | 10 accepted, 0 rejected,        |        |
+   |                     |                    | collisions 1                    |        |
+2  | ID found            | F004               | Found: Computer Lab A           |        |
+3  | Lowercase ID        | f004               | Same as test 2                  |        |
+4  | Invalid ID          | 004                | Invalid format message          |        |
+5  | ID not found        | F999               | Not found: F999                 |        |
+6  | Blank ID            | (press Enter)      | Error, back to menu             |        |
+7  | Hash collision      | ./campus           | 2 accepted, 1 rejected,         |        |
+   |                     | testdata/collision | collisions 1                    |        |
+8  | Duplicate ID        | f001 in collision  | Rejected, collisions stays 1    |        |
