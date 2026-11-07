@@ -3,6 +3,7 @@
 #include <limits>
 #include <fstream>
 #include "CampusGraph.h"
+#include "FacilityDatabase.h"
 using namespace std;
 
 int main(){
@@ -71,6 +72,10 @@ CampusGraph graph;
         connectionFile.close();
     }
 
+    //Loading facilities, (needs the graph so it goes after buildings and connections)
+    FacilityDatabase db;
+    db.load("data", graph);
+
     //We create an empty bucket choice to store the user respond
     int choice = 0;
 
@@ -103,10 +108,24 @@ CampusGraph graph;
             cout << "Invalid input. Please enter a number.\n";
             continue;
         }
+        //Facility Menu Option
+        //Display all facilities in file order
+        if (choice == 1){
+            db.displayAll(); // display all 
+        }
+        //Search for a facility by ID and using the hash table
+        else if (choice == 2){
+            string input;
+            // Remove the newline left by cin
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << "Enter Facility ID: ";
+            getline(cin, input);
+            db.searchById(input);
+        }
 
         // Campus graph menu options
-
-        if (choice == 3) {
+        else if (choice == 3) {
             // Display all buildings and their connections
             graph.displayGraph();
         }
