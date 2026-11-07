@@ -1,7 +1,6 @@
 /*
  * @Author: @MatthewHtang
  * @Date: 2026-11-06 10:06:24 
- * @Last Modified by: mikey.zhaopeng
  * @Last Modified time: 2026-11-06 10:59:32
  * 
  * This file is the actual implementation of the facility.h.
