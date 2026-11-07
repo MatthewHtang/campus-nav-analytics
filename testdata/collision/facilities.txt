@@ -1,0 +1,5 @@
+# F001 and F013 both hash to bucket 3,  (capacity 11) -> 1 collision
+F001|Main Reading Room|Library|Library
+F013|Study Room|Library|Study Space
+# Lowercase duplicate of F001 -> rejected, collision count must stay 1
+f001|Duplicate Room|Library|Library
