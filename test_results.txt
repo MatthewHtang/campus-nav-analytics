@@ -89,3 +89,31 @@ Use this comand line to test the program : g++ -std=c++17 -Wall -Iinclude src/*.
 
 *Note: for some reason, i can not load my test txt files from collision folder in here, without changing the code. 
 Therefore all the tests with txt files from collision all failed for this milestone (we'll take alook if we still have time).
+
+
+========================================
+ MEMBER B - CAMPUS GRAPH AND BFS TESTING
+========================================
+
+Tested by: Alka Gurung
+Environment: UNT CELL18
+
+Test 1: Campus Graph Display - PASS
+7 buildings and 6 connections displayed correctly.
+
+Test 2: Graph Counts and Degrees - PASS
+7 buildings, 6 connections, all degrees correct.
+
+Test 3: BFS from Library - PASS
+6 of 7 buildings reachable with correct distances.
+
+Test 4: BFS from Observatory - PASS
+Only Observatory reachable, distance 0.
+
+Test 5: Invalid Building Name - PASS
+UnknownBuilding displayed an error without crashing.
+
+Test 6: Lowercase Building Name - PASS
+library recognized correctly, 6 of 7 reachable.
+
+SUMMARY: ALL 6 TESTS PASSED
