@@ -1,42 +1,50 @@
 TEST RESULTS - Milestone 1
 Member C (Sankalp): Department Tree
 
-Actual and Pass/Fail are left blank until the current program is tested.
+The table lists test inputs, expected results, actual results, and pass/fail.
+Actual results are not recorded yet. Run each test before marking it Passed.
 
-#  | Test                 | Input                         | Expected                              | Actual | Pass/Fail
----+----------------------+-------------------------------+---------------------------------------+--------+----------
-1  | Load sample tree     | Sample departments.txt        | 7 accepted, 0 rejected                |        |
-2  | Blank/comment lines  | Blank lines and # comments    | Skip lines; do not count as rejected  |        |
-3  | Wrong field count    | Missing or extra field        | Reject; show filename, line and reason|        |
-4  | Missing file         | No departments.txt            | Show file error; continue without crash|       |
-5  | Invalid root         | First record: School|Missing  | Reject; first root needs parent NONE  |        |
-6  | Unknown parent       | Biology|Missing               | Reject; tree stays unchanged          |        |
-7  | Parent appears later | Child listed before parent    | Reject; parent must be accepted first |        |
-8  | Second root          | School|NONE after University  | Reject; keep the existing root        |        |
-9  | Duplicate department | university after University   | Reject; keep first accepted record    |        |
-10 | Empty field          | Biology| or |University       | Reject; show filename, line and reason|        |
-11 | Empty tree           | Options 8 and 9; no departments| Show clear empty-tree messages        |        |
-12 | Add root             | Option 6; empty tree; School   | Add root without asking for a parent  |        |
-13 | Root-only search     | Option 7; School              | Parent None; children 0; depth 0       |        |
-14 | Root-only traversal  | Options 8 and 9               | Show School only                      |        |
-15 | Add department       | Biology under University      | Add Biology as a child of University  |        |
-16 | Add unknown parent   | Biology under Missing         | Show error; tree stays unchanged      |        |
-17 | Add duplicate        | Add University again          | Show duplicate error; no new node     |        |
-18 | Search sample root   | Option 7; University          | Parent None; children 2; depth 0       |        |
-19 | Search sample child  | Option 7; Computer Science    | Parent College of Engineering;        |        |
-   |                      |                               | children 0; depth 2                   |        |
-20 | Case and spaces      | " computer SCIENCE "          | Find Computer Science                 |        |
-21 | Missing department   | Option 7; Missing             | Show not found; return to menu        |        |
-22 | Name with spaces     | Add Data Science under        | Accept full name; search finds it     |        |
-   |                      | College of Science            |                                       |        |
-23 | Blank name           | Blank name when adding/searching| Show error; return to menu          |        |
-24 | Blank parent         | Add child with blank parent   | Show error; tree stays unchanged      |        |
-25 | Display hierarchy    | Option 8; sample tree         | Preorder with four spaces per depth;  |        |
-   |                      |                               | keep sibling insertion order         |        |
-26 | Preorder traversal   | Option 9; sample tree         | Show sequence below, no indentation   |        |
-27 | More than 2 children | Add third child to University | Accept; general tree allows it        |        |
-28 | Memory-only addition | Add Biology; restart program  | Biology not saved; file unchanged     |        |
-29 | Recovery after error | Invalid add, then valid search| Search works; menu continues          |        |
+Build: g++ -std=c++17 -Wall -Iinclude src/*.cpp -o campus
+Run:   ./campus
+
+Use fresh sample data for tests that expect fixed child counts.
+Options: 6 = Add, 7 = Search, 8 = Hierarchy, 9 = Preorder.
+
+#   | Test                   | Input                           | Expected                                | Actual           | Pass/Fail
+----+------------------------+---------------------------------+-----------------------------------------+------------------+-------------
+1   | Load sample tree       | Sample departments.txt          | 7 accepted, 0 rejected                  | -                | Not tested
+2   | Blank/comment lines    | Blank lines and # comments      | Skip lines; do not count as rejected    | -                | Not tested
+3   | Wrong field count      | Missing or extra field          | Reject; show filename, line and reason  | -                | Not tested
+4   | Missing file           | No departments.txt              | Show file error; continue without crash | -                | Not tested
+5   | Invalid root           | First record: School|Missing    | Reject; first root needs parent NONE    | -                | Not tested
+6   | Unknown parent         | Biology|Missing                 | Reject; tree stays unchanged            | -                | Not tested
+7   | Parent appears later   | Child listed before parent      | Reject; parent must be accepted first   | -                | Not tested
+8   | Second root            | School|NONE after University    | Reject; keep the existing root          | -                | Not tested
+9   | Duplicate department   | university after University     | Reject; keep first accepted record      | -                | Not tested
+10  | Empty field            | Biology| or |University         | Reject; show filename, line and reason  | -                | Not tested
+11  | Empty tree             | Options 8 and 9; no departments | Show clear empty-tree messages          | -                | Not tested
+12  | Add root               | Option 6; empty tree; School    | Add root without asking for a parent    | -                | Not tested
+13  | Root-only search       | Option 7; School                | Parent None; children 0; depth 0        | -                | Not tested
+14  | Root-only traversal    | Options 8 and 9                 | Show School only                        | -                | Not tested
+15  | Add department         | Biology under University        | Add Biology as a child of University    | -                | Not tested
+16  | Add unknown parent     | Biology under Missing           | Show error; tree stays unchanged        | -                | Not tested
+17  | Add duplicate          | Add University again            | Show duplicate error; no new node       | -                | Not tested
+18  | Search sample root     | Option 7; University            | Parent None; children 2; depth 0        | -                | Not tested
+19  | Search sample child    | Option 7; Computer Science      | Parent: College of Engineering;         | -                | Not tested
+    |                        |                                 | children 0; depth 2                     |                  |
+20  | Case and spaces        | " computer SCIENCE "            | Find Computer Science                   | -                | Not tested
+21  | Missing department     | Option 7; Missing               | Show not found; return to menu          | -                | Not tested
+22  | Name with spaces       | Add Data Science under College  | Accept full name; search finds it       | -                | Not tested
+    |                        | of Science                      |                                         |                  |
+23  | Blank name             | Blank name when                 | Show error; return to menu              | -                | Not tested
+    |                        | adding/searching                |                                         |                  |
+24  | Blank parent           | Add child with blank parent     | Show error; tree stays unchanged        | -                | Not tested
+25  | Display hierarchy      | Option 8; sample tree           | Preorder; four spaces per depth;        | -                | Not tested
+    |                        |                                 | sibling insertion order                 |                  |
+26  | Preorder traversal     | Option 9; sample tree           | Show sequence below, no indentation     | -                | Not tested
+27  | More than 2 children   | Add third child to University   | Accept; general tree allows it          | -                | Not tested
+28  | Memory-only addition   | Add Biology; restart program    | Biology not saved; file unchanged       | -                | Not tested
+29  | Recovery after error   | Invalid add, then valid search  | Search works; menu continues            | -                | Not tested
 
 Expected sample hierarchy:
 
@@ -52,8 +60,6 @@ Expected sample preorder:
 
 University -> College of Engineering -> Computer Science ->
 Electrical Engineering -> College of Science -> Mathematics -> Physics
-
-Note: Start with fresh sample data for tests that expect fixed child counts.
 
 
 ############################################################################################################################################################
