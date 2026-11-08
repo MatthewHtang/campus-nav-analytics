@@ -7,6 +7,8 @@
 using namespace std;
 
 int main(){
+
+
 CampusGraph graph;
 
     // Loading campus buildings
@@ -71,3 +73,59 @@ CampusGraph graph;
 
         connectionFile.close();
     }
+
+    //Loading facilities, (needs the graph so it goes after buildings and connections)
+    FacilityDatabase db;
+    db.load("data", graph);
+
+    //We create an empty bucket choice to store the user respond
+    int choice = 0;
+
+    do {
+        cout << "\n";
+        cout <<"\033[32m"<< "=============================================================\n";
+        cout <<"\033[32m"<< "   Smart Campus Navigation and Facility Analytics System\n";
+        cout <<"\033[32m"<< "=============================================================\n";
+        cout <<"\033[32m"<< "|                  1. View all facilities                   |\n";
+        cout <<"\033[32m"<< "|                  2. Search facility by ID                 |\n";
+        cout <<"\033[32m"<< "|                  3. View campus graph                     |\n";
+        cout <<"\033[32m"<< "|                  4. Display graph counts and degrees      |\n";
+        cout <<"\033[32m"<< "|                  5. Find reachable buildings (BFS)        |\n";
+        cout <<"\033[32m"<< "|                  6. Add department                        |\n";
+        cout <<"\033[32m"<< "|                  7. Search department                     |\n";
+        cout <<"\033[32m"<< "|                  8. Display department hierarchy          |\n";
+        cout <<"\033[32m"<< "|                  9. Run preorder traversal                |\n";
+        cout <<"\033[32m"<< "|                  10. Exit                                 |\n";
+        cout <<"\033[32m"<< "=============================================================\n";
+        cout <<"\033[32m"<< "                   Enter Choice: ";
+
+          if (!(cin >> choice)) {
+            if (cin.eof()) {
+                break;
+            }
+
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << "Invalid input. Please enter a number.\n";
+            continue;
+        }
+        //Facility Menu Option
+        //Display all facilities in file order
+        if (choice == 1){
+            db.displayAll(); // display all 
+        }
+        //Search for a facility by ID and using the hash table
+        else if (choice == 2){
+            string input;
+            // Remove the newline left by cin
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << "Enter Facility ID: ";
+            getline(cin, input);
+            db.searchById(input);
+        }
+    } while (choice != 10);
+}
+    
+
