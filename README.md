@@ -1,10 +1,10 @@
 # Smart Campus Navigation and Facility Analytics System
 
-Course: CSCE 2110 – Foundations of Data Structures
-University: University of North Texas
-Project: Project 2 – Milestone 1
-Programming Language: C++
-Team Members: Matthew Htang, Alka Gurung, Sankalp Gupta
+**Course:** CSCE 2110 – Foundations of Data Structures  
+**University:** University of North Texas  
+**Project:** Project 2 – Milestone 1  
+**Programming Language:** C++  
+**Team Members:** Matthew Htang, Alka Gurung, Sankalp Gupta
 
 ## 1. Project Overview
 
