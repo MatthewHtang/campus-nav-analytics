@@ -1,0 +1,1 @@
+# No departments. Adding one should create the root.

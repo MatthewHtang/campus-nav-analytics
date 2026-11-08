@@ -1,0 +1,12 @@
+# Member C: only two walkways should be accepted.
+ library | STUDENT UNION
+Library|Student Union
+student union|LIBRARY
+Library|Library
+Library|Missing
+Missing|Library
+Library
+Library|Student Union|Observatory
+Library|
+|Library
+Room #5|Student  Union

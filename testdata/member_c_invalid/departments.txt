@@ -1,0 +1,17 @@
+# Member C: the first accepted record must be the root.
+Too Early|Missing
+
+ University | none
+College of Engineering| UNIVERSITY
+Computer Science|College of Engineering
+computer science|University
+Lost|Missing
+Second Root|NONE
+Empty Parent|
+|University
+Too Few
+Too Many|University|Extra
+Before Parent|Later Parent
+Later Parent|University
+Room #5|University
+College  of Engineering|University
