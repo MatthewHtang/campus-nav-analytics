@@ -1,0 +1,9 @@
+# Member C: valid names mixed with invalid records.
+
+ Library 
+Student Union
+Observatory
+library
+Bad|Building
+Room #5
+Student  Union
