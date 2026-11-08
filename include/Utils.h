@@ -1,11 +1,23 @@
 /*
- * @Author: @MatthewHtang
- * @Date: 2026-11-07 23:50:31 
- * @Last Modified time: 2026-11-07 23:50:31 
+ * @Author: Matthew Htang
+ * @Date: 2026-11-05 10:08:45
+ * @Last Modified time: 2026-11-05 10:09:05
+ * @Modified by: @sankalpg370-bit
+ * @Last Modified time: 2026-11-08 00:04:33
+ *
+ * This file contain a blue print for the data cleaner.
+ * The following impplemented function include;
+ * triming, spliting, toUpper, toLower, equalsIgnoreCase,
+ * isValidId and read the record
+ * Purpose: Declares the shared helpers used by every module: text cleaning
+ *   (trim, split, case conversion and comparison), ID checks, the common file
+ *   reader and warning printer used by all four loaders, a percentage
+ *   formatter for the category report, and menu input helpers that recover
+ *   from blank, text and out-of-range input.
+ *
+ * Credit: trim, split, toUpper, toLower, equalsIgnoreCase and the original
+ *   function list by Matthew Htang (Member A); completed by Sankalp (Member C).
  */
-
-// Authors: Matthew Htang (original text helpers), Sankalp (shared helpers).
-
 
 #ifndef UTILS_H
 #define UTILS_H
