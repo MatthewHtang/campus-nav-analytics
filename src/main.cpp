@@ -123,9 +123,8 @@ CampusGraph graph;
             getline(cin, input);
             db.searchById(input);
         }
-    } while (choice != 10);
-}
- // Campus graph menu options
+
+        // Campus graph menu options
         else if (choice == 3) {
             // Display all buildings and their connections
             graph.displayGraph();
@@ -148,4 +147,7 @@ CampusGraph graph;
  
             graph.bfs(startBuilding);
         }
+    } while (choice != 10);
+}
+
  
