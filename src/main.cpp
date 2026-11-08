@@ -125,5 +125,27 @@ CampusGraph graph;
         }
     } while (choice != 10);
 }
-    
-
+ // Campus graph menu options
+        else if (choice == 3) {
+            // Display all buildings and their connections
+            graph.displayGraph();
+        }
+ 
+        else if (choice == 4) {
+            // Display graph counts and degrees
+            graph.displayStatistics();
+        }
+ 
+        else if (choice == 5) {
+            // Find reachable buildings using BFS
+            string startBuilding;
+ 
+            // Remove the newline left by cin
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+ 
+            cout << "Enter starting building: ";
+            getline(cin, startBuilding);
+ 
+            graph.bfs(startBuilding);
+        }
+ 
