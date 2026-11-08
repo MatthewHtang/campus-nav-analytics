@@ -54,3 +54,32 @@ University -> College of Engineering -> Computer Science ->
 Electrical Engineering -> College of Science -> Mathematics -> Physics
 
 Note: Start with fresh sample data for tests that expect fixed child counts.
+
+
+############################################################################################################################################################
+
+TEST RESULTS - Milestone 1
+Member A (Matthew Htang): Hash table and ID search
+The following table is rough data inputs, its expected value and checking whether they are passed or failed
+
+Use this comand line to test the program : g++ -std=c++17 -Wall -Iinclude src/*.cpp -o campus
+                                         : ./campus (run this if you want to test with txt files from data folder)
+                                         
+                                         (run this if you want to test with txt files from collision folder)
+                                         : ./campus testdata/collision 
+
+#  | Test                | Input              | Expected                        | Actual                               | Pass/Fail
+---+---------------------+--------------------+---------------------------------+--------------------------------------+-------------
+1  | Load sample data    | ./campus           | 10 accepted, 0 rejected,        | 10 accepted, 0 rejected, 1 collision | Passed    
+   |                     |                    | collisions 1                    |    
+2  | ID found            | F004               | Found: Computer Lab A           |    Found : Computer Lab A            | Passed    
+3  | Lowercase ID        | f004               | Same as test 2                  |    the same as test 2                | Passed    
+4  | Invalid ID          | 004                | Invalid format message          |        Invalid format                | Passed
+5  | ID not found        | F999               | Not found: F999                 |        Not found                     | Passed
+6  | Blank ID            | just press enter   | Error, back to menu             |  Error: ID cannot be blank           | Passed
+7  | Hash collision      | ./campus           | 2 accepted, 1 rejected,         |  10 accepted, 0 rejected, 1 collision| Failed
+   |                     | testdata/collision | collisions 1                    |              -                       | Failed
+8  | Duplicate ID        | f001 in collision  | Rejected, collisions stays 1    |              -                       | Failed
+
+*Note: for some reason, i can not load my test txt files from collision folder in here, without changing the code. 
+Therefore all the tests with txt files from collision all failed for this milestone (we'll take alook if we still have time).
