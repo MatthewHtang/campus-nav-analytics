@@ -7,8 +7,6 @@
 using namespace std;
 
 int main(){
-
-
 CampusGraph graph;
 
     // Loading campus buildings
