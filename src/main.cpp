@@ -1,4 +1,4 @@
-// Authors: Matthew Htang (Member A), Alka Gurung(Member B) and Sankalp (Member C)
+// Authors: Matthew Htang (Member A), Alka Gurung (Member B) and Sankalp (Member C)
 // Purpose: Load campus data and run the Milestone 1 menu.
 
 #include <iostream>
@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
         cout << "\033[32m" << "|                  7. Search department                     |\n";
         cout << "\033[32m" << "|                  8. Display department hierarchy          |\n";
         cout << "\033[32m" << "|                  9. Run preorder traversal                |\n";
-        cout << "\033[32m" << "|                  10. Exit                                  |\n";
+        cout << "\033[32m" << "|                  0. Exit                                   |\n";
         cout << "\033[32m" << "=============================================================\n";
         cout << "\033[0m";
 
@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
             // Visit each parent before its children.
             departments.displayPreorder();
         }
-    } while (choice != 10); // Improved naming - matthew
+    } while (choice != 0);
 
     return 0;
 }

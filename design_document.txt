@@ -1,40 +1,56 @@
-Matthew:
-1) Hash function
+MILESTONE 1 DESIGN
 
-Before hashing, the raw facility id (f101) is first trimmed and convert it to
-upper case. So, "f101" become "F101". Then, when its ready it simply apply to the hash function.
-For building a customize hash function, I use sperate chain method which is one of the
-solution to solve collision. And the formula I use for the hash function is 
+1. Custom hash table (Matthew)
+Facility IDs are trimmed and converted to uppercase before use. Valid IDs
+are F followed by three digits. Starting at h = 0, each character c updates:
+    h = (h * 31 + c) % capacity
+The default capacity is INITIAL_CAPACITY = 11. No library hash is used.
 
-h = (h * 31 + c) % capacity, 
+2. Collision strategy and counting
+Separate chaining uses vector<vector<Entry>>: the outer vector holds buckets,
+and each inner vector holds that bucket's entries. These are vectors, not
+linked lists. Chaining is simple and allows more facilities than buckets.
+Each accepted insertion into a nonempty bucket counts as ONE collision.
+Rejected duplicates do not change entries or collisions and keep the first
+record. Lookup hashes the ID and searches only its bucket.
+F001 and F013 collide at capacity 11. testdata/collision includes both and
+a lowercase duplicate f001: expected entries 2, rejected 1, collisions 1.
 
-where h is the running hash value which is initially zero. Multiply by 31 makes the position
-of each character matter so that facility id such as F012 and F021 lands in different buckets.
-c is the current character of a key,in our case its a facility id such as F001, F103 etc in ASCII code. 
-Capacity is initialized as 11, because prime number spread the key more evenly. The modulus is basically 
-a way to keeps the index between 0 and capacity − 1.
+3. Capacity
+Capacity limits buckets, not records. Chains grow dynamically; there is no
+fixed full-table rejection. Construction clamps a nonpositive capacity to 1
+and allocates that many buckets. The table does not rehash or resize later.
 
-2) The collision strategy: sperate chaining
-As mentioned above, the strategy I use for this collision is to use sperate chaining (open hashing). In 
-sperate chaining, each bucket holds a small collection of (linked list) of the keys that is hash to it.
-In the HashTable header file, you may notice "std::vector<std::vector<Entry>> buckets". Its basically
-saying that the outer vector is the row of buckets, and each inner vector is one bucket's chain. Each Entry stores
-the facility ID and that facility's index in the facilities vector. The reason why sperate chaining is preferable in 
-this hash function is that, unlike linear probing, the table never fills up, the incoming keys are all properly added 
-as a linked list in the table. 
+4. Graph (Alka, with shared loading work)
+CampusGraph stores building names and a vector of neighbor lists. An adjacency
+list is suitable because each building connects to relatively few others;
+it stores O(V + E) information. Buildings and neighbors keep insertion order.
+Each walkway is saved at both endpoints but counted once. Duplicate/reversed
+edges, self-connections, and unknown endpoints are rejected. All graph
+features use this same representation. BFS uses a queue and marks a building
+visited when enqueued. The start has distance 0 and counts as reachable.
 
-3) How collisions are counted
-The way the collision are count in the function is that when the bucket is not empty and its already occupied,
-collisionCount ++.
+5. Department tree (Sankalp)
+DepartmentNode stores a name, parent pointer, depth, and vector of child
+pointers. Any number of children is allowed. DepartmentTree owns and deletes
+all nodes; copying is disabled to prevent duplicate deletion. The first valid
+record requires parent NONE. Other parents must already exist. Names match
+ignoring case and outer whitespace. Hierarchy and preorder visit children in
+insertion order; hierarchy indents four spaces per depth. Menu additions
+change memory only. An empty tree accepts a root without a parent prompt.
 
-4) Capacity
-The table has 11 buckets. 11 is prime, which is prime and it helps spread keys evenly. The capacity limits the number of buckets,
-not the number of facilities, because chains grow, and there is no maximun number of facilities, so the table is never full. Resizing 
-is not implemented, except for one condition. In the code I added one line in HashTable.cpp, "buckets.resize(this->capacity);" it will
-resize the table as 1 if the table is empty.
+6. Main modules
+Facility: stores ID, name, canonical building spelling, and category.
+HashTable: stores normalized IDs and indexes into the facilities vector.
+FacilityDatabase: loads, validates, displays, and searches facilities; keeps
+first accepted category spelling and facility file order.
+CampusGraph: buildings, walkways, graph display, degrees, and BFS.
+DepartmentNode/DepartmentTree: department records, loading, add/search,
+hierarchy, and preorder.
+Utils: trimming, splitting, case conversion, ID validation, record reading,
+warnings, summaries, and whole-line menu input.
+main.cpp: coordinates ordered loading and menu choices 0 through 9.
 
-5) classes
-There are three main classes in this program. Facility: has four fields, id, name, building, category,
-and get those fileds. HashTable contain a hash function, a hash table itself, a method to insert, find, get capacity,
-getEntryCount, and getCollisionCount. The class FacilityDatabase is basically a manager that manages facility, hash table. 
-It also load the file, display all the facilities, search by their id and also get the count value. 
+7. Scope
+Postorder, level-order, statistics, shortest paths, and reports are Final
+features. Their existing code is not required to finish Milestone 1.
