@@ -1,119 +1,118 @@
 TEST RESULTS - Milestone 1
-Member C (Sankalp): Department Tree
+Local integration run: 2026-11-08, macOS, g++ (Apple Clang), C++17
+Executed with Codex assistance. These results are not a CELL certification.
+Repeat: python3 tests/run_m1_tests.py
+Record: python3 tests/run_m1_tests.py --record
+Build: g++ -std=c++17 -Wall -Wextra -pedantic -Iinclude src/*.cpp -o campus
+Each row runs a fresh process. generated/ inputs are created by the script in temporary folders.
+Input strings show \n for Enter. Expected text is checked against actual output.
+A Passed row means every listed expected fragment appeared, forbidden fragments were absent, and the process exited normally.
+Build diagnostics: none
 
-The table lists test inputs, expected results, actual results, and pass/fail.
-Actual results are not recorded yet. Run each test before marking it Passed.
+#    | Test                         | Input                                      | Expected                                       | Actual                                         | Pass/Fail
+-----+------------------------------+--------------------------------------------+------------------------------------------------+------------------------------------------------+-----------
+1    | Load all sample files        | data; input '0\n'                          | buildings.txt: 7 accepted, 0 rejected;         | buildings.txt: 7 accepted, 0 rejected;         | Passed
+     |                              |                                            | connections.txt: 6 accepted, 0 rejected;       | connections.txt: 6 accepted, 0 rejected;       |
+     |                              |                                            | facilities.txt: 10 accepted, 0 rejected;       | facilities.txt: 10 accepted, 0 rejected;       |
+     |                              |                                            | departments.txt: 7 accepted, 0 rejected; hash  | departments.txt: 7 accepted, 0 rejected; hash  |
+     |                              |                                            | capacity 11, entries 10, collisions 1          | capacity 11, entries 10, collisions 1          |
+2    | ID 'F004'                    | data; input '2\nF004\n0\n'                 | Found: F004 | Computer Lab A                   | Found: F004 | Computer Lab A                   | Passed
+3    | ID ' f004 '                  | data; input '2\n f004 \n0\n'               | Found: F004 | Computer Lab A                   | Found: F004 | Computer Lab A                   | Passed
+4    | ID '004'                     | data; input '2\n004\n0\n'                  | Invalid format:                                | Invalid format:                                | Passed
+5    | ID 'F999'                    | data; input '2\nF999\n0\n'                 | Not found: no facility with ID F999            | Not found: no facility with ID F999            | Passed
+6    | ID ''                        | data; input '2\n\n0\n'                     | Error: ID cannot be blank                      | Error: ID cannot be blank                      | Passed
+7    | Facility display             | data; input '1\n0\n'                       | F001 | Main Reading Room; F010 | Research Help | F001 | Main Reading Room; F010 | Research Help | Passed
+     |                              |                                            | Desk; Total facilities: 10                     | Desk; Total facilities: 10                     |
+8    | Collision and duplicate      | testdata/collision; input                  | 2 accepted, 1 rejected (hash capacity 11,      | 2 accepted, 1 rejected (hash capacity 11,      | Passed
+     |                              | '1\n2\nf001\n0\n'                          | entries 2, collisions 1); duplicated ID:       | entries 2, collisions 1); duplicated ID:       |
+     |                              |                                            | 'F001'; Found: F001 | Main Reading Room; must  | 'F001'; Found: F001 | Main Reading Room        |
+     |                              |                                            | omit Duplicate Room |                          |                                                |
+9    | Collision without duplicate  | generated/collision_without_duplicate;     | 2 accepted, 0 rejected (hash capacity 11,      | 2 accepted, 0 rejected (hash capacity 11,      | Passed
+     |                              | input '0\n'                                | entries 2, collisions 1)                       | entries 2, collisions 1)                       |
+10   | Facility validation and      | generated/category; input '1\n0\n'         | facilities.txt: 3 accepted, 4 rejected; F001 | | facilities.txt: 3 accepted, 4 rejected; F001 | | Passed
+     | spelling                     |                                            | First | Library | Computer Lab; F002 | Second  | First | Library | Computer Lab; F002 | Second  |
+     |                              |                                            | | Library | Computer Lab; F003 | Third |       | | Library | Computer Lab; F003 | Third |       |
+     |                              |                                            | Library | Library; unknown building:; field 4  | Library | Library; unknown building:; field 4  |
+     |                              |                                            | is empty                                       | is empty                                       |
+11   | Graph order and isolation    | data; input '3\n4\n0\n'                    | Library: Student Union, Business Building;     | Library: Student Union, Business Building;     | Passed
+     |                              |                                            | Observatory: (no connections); Total           | Observatory: (no connections); Total           |
+     |                              |                                            | buildings: 7; Total connections: 6; Library -  | buildings: 7; Total connections: 6; Library -  |
+     |                              |                                            | Degree: 2; Student Union - Degree: 3; Science  | Degree: 2; Student Union - Degree: 3; Science  |
+     |                              |                                            | Building - Degree: 2; Engineering Building -   | Building - Degree: 2; Engineering Building -   |
+     |                              |                                            | Degree: 1; Business Building - Degree: 2; Gym  | Degree: 1; Business Building - Degree: 2; Gym  |
+     |                              |                                            | - Degree: 2; Observatory - Degree: 0           | - Degree: 2; Observatory - Degree: 0           |
+12   | BFS connected order          | data; input '5\n library \n0\n'            | Library - Distance: 0 Student Union -          | Library - Distance: 0 Student Union -          | Passed
+     |                              |                                            | Distance: 1 Business Building - Distance: 1    | Distance: 1 Business Building - Distance: 1    |
+     |                              |                                            | Science Building - Distance: 2 Gym - Distance: | Science Building - Distance: 2 Gym - Distance: |
+     |                              |                                            | 2 Engineering Building - Distance: 3 ;         | 2 Engineering Building - Distance: 3 ;         |
+     |                              |                                            | Reachable: 6 of 7 buildings                    | Reachable: 6 of 7 buildings                    |
+13   | BFS isolated                 | data; input '5\nObservatory\n0\n'          | Observatory - Distance: 0; Reachable: 1 of 7   | Observatory - Distance: 0; Reachable: 1 of 7   | Passed
+     |                              |                                            | buildings                                      | buildings                                      |
+14   | BFS unknown                  | data; input '5\nMissing\n0\n'              | Unknown building "Missing"                     | Unknown building "Missing"                     | Passed
+15   | Invalid graph records        | testdata/member_c_invalid; input '5\nRoom  | buildings.txt: 5 accepted, 2 rejected;         | buildings.txt: 5 accepted, 2 rejected;         | Passed
+     |                              | #5\n0\n'                                   | connections.txt: 2 accepted, 9 rejected; self- | connections.txt: 2 accepted, 9 rejected; self- |
+     |                              |                                            | connection; duplicate connection; unknown      | connection; duplicate connection; unknown      |
+     |                              |                                            | building; Reachable: 2 of 5 buildings          | building; Reachable: 2 of 5 buildings          |
+16   | Empty structures             | generated/empty; input                     | No facilities; Library: (no connections);      | No facilities; Library: (no connections);      | Passed
+     |                              | '1\n3\n4\n8\n9\n0\n'                       | Total buildings: 1; No departments             | Total buildings: 1; No departments             |
+17   | Zero-byte files              | generated/zero; input '1\n3\n4\n8\n0\n'    | Total buildings: 0; Total connections: 0;      | Total buildings: 0; Total connections: 0;      | Passed
+     |                              |                                            | facilities.txt: 0 accepted, 0 rejected;        | facilities.txt: 0 accepted, 0 rejected;        |
+     |                              |                                            | departments.txt: 0 accepted, 0 rejected        | departments.txt: 0 accepted, 0 rejected        |
+18   | Missing all files            | generated/missing; input '3\n8\n0\n'       | cannot open file "buildings.txt"; cannot open  | cannot open file "buildings.txt"; cannot open  | Passed
+     |                              |                                            | file "connections.txt"; cannot open file       | file "connections.txt"; cannot open file       |
+     |                              |                                            | "facilities.txt"; cannot open file             | "facilities.txt"; cannot open file             |
+     |                              |                                            | "departments.txt"                              | "departments.txt"                              |
+19   | C load invalid records       | testdata/member_c_invalid; input '0\n'     | departments.txt: 6 accepted, 9 rejected        | departments.txt: 6 accepted, 9 rejected        | Passed
+20   | C rejected line 2            | testdata/member_c_invalid; input '0\n'     | departments.txt, line 2:                       | departments.txt, line 2:                       | Passed
+21   | C rejected line 7            | testdata/member_c_invalid; input '0\n'     | departments.txt, line 7:                       | departments.txt, line 7:                       | Passed
+22   | C rejected line 8            | testdata/member_c_invalid; input '0\n'     | departments.txt, line 8:                       | departments.txt, line 8:                       | Passed
+23   | C rejected line 9            | testdata/member_c_invalid; input '0\n'     | departments.txt, line 9:                       | departments.txt, line 9:                       | Passed
+24   | C rejected line 10           | testdata/member_c_invalid; input '0\n'     | departments.txt, line 10:                      | departments.txt, line 10:                      | Passed
+25   | C rejected line 11           | testdata/member_c_invalid; input '0\n'     | departments.txt, line 11:                      | departments.txt, line 11:                      | Passed
+26   | C rejected line 12           | testdata/member_c_invalid; input '0\n'     | departments.txt, line 12:                      | departments.txt, line 12:                      | Passed
+27   | C rejected line 13           | testdata/member_c_invalid; input '0\n'     | departments.txt, line 13:                      | departments.txt, line 13:                      | Passed
+28   | C rejected line 14           | testdata/member_c_invalid; input '0\n'     | departments.txt, line 14:                      | departments.txt, line 14:                      | Passed
+29   | C root without parent prompt | generated/empty; input                     | Department added: School; Parent: None Direct  | Department added: School; Parent: None Direct  | Passed
+     |                              | '6\nSchool\n7\nSchool\n8\n9\n0\n'          | children: 0 Depth: 0; Preorder: School; must   | children: 0 Depth: 0; Preorder: School         |
+     |                              |                                            | omit Parent department:                        |                                                |
+30   | C root details               | data; input '7\nUniversity\n0\n'           | Parent: None Direct children: 2 Depth: 0       | Parent: None Direct children: 2 Depth: 0       | Passed
+31   | C child case and spaces      | data; input '7\n computer SCIENCE \n0\n'   | Department: Computer Science Parent: College   | Department: Computer Science Parent: College   | Passed
+     |                              |                                            | of Engineering Direct children: 0 Depth: 2     | of Engineering Direct children: 0 Depth: 2     |
+32   | C missing search             | data; input '7\nMissing\n0\n'              | Department "Missing" was not found             | Department "Missing" was not found             | Passed
+33   | C add third child            | data; input '6\nData                       | Department added: Data Science; Parent:        | Department added: Data Science; Parent:        | Passed
+     |                              | Science\nUniversity\n7\nData               | University; Direct children: 3                 | University; Direct children: 3                 |
+     |                              | Science\n7\nUniversity\n0\n'               |                                                |                                                |
+34   | C duplicate add              | data; input '6\nuniversity\nUniversity\n7\ | duplicate department; Direct children: 2       | duplicate department; Direct children: 2       | Passed
+     |                              | nUniversity\n0\n'                          |                                                |                                                |
+35   | C unknown parent             | data; input                                | unknown parent "Missing"; Department "Lost"    | unknown parent "Missing"; Department "Lost"    | Passed
+     |                              | '6\nLost\nMissing\n7\nLost\n0\n'           | was not found                                  | was not found                                  |
+36   | C blank names                | data; input '6\n\n7\n\n0\n'                | Error: department name cannot be blank.        | Error: department name cannot be blank.        | Passed
+37   | C blank parent               | data; input '6\nLost\n\n7\nLost\n0\n'      | parent name is empty; Department "Lost" was    | parent name is empty; Department "Lost" was    | Passed
+     |                              |                                            | not found                                      | not found                                      |
+38   | C hierarchy                  | data; input '8\n0\n'                       | University     College of Engineering          | University     College of Engineering          | Passed
+     |                              |                                            | Computer Science         Electrical            | Computer Science         Electrical            |
+     |                              |                                            | Engineering     College of Science             | Engineering     College of Science             |
+     |                              |                                            | Mathematics         Physics                    | Mathematics         Physics                    |
+39   | C preorder                   | data; input '9\n0\n'                       | Preorder: University -> College of Engineering | Preorder: University -> College of Engineering | Passed
+     |                              |                                            | -> Computer Science -> Electrical Engineering  | -> Computer Science -> Electrical Engineering  |
+     |                              |                                            | -> College of Science -> Mathematics ->        | -> College of Science -> Mathematics ->        |
+     |                              |                                            | Physics                                        | Physics                                        |
+40   | C memory-only restart        | data; input '7\nData Science\n0\n'         | Department "Data Science" was not found        | Department "Data Science" was not found        | Passed
+41   | Menu recovery                | data; input '\nabc\n99\n10\n2x\n9999999999 | Error: enter a menu choice.; Error: enter a    | Error: enter a menu choice.; Error: enter a    | Passed
+     |                              | 99999999999\n5\n\n7\nUniversity\n0\n'      | number from 0 to 9.; building name cannot be   | number from 0 to 9.; building name cannot be   |
+     |                              |                                            | blank; Department: University                  | blank; Department: University                  |
+42   | Exit or EOF '0\n'            | data; input '0\n'                          |                                                | Exited normally                                | Passed
+43   | Exit or EOF ''               | data; input ''                             |                                                | Exited normally                                | Passed
+44   | Exit or EOF '6\n'            | data; input '6\n'                          |                                                | Exited normally                                | Passed
+45   | Exit or EOF '6\nChild\n'     | data; input '6\nChild\n'                   |                                                | Exited normally                                | Passed
+46   | Exit or EOF '7\n'            | data; input '7\n'                          |                                                | Exited normally                                | Passed
+47   | Exit or EOF '5\n'            | data; input '5\n'                          |                                                | Exited normally                                | Passed
+48   | Exit or EOF '2\n'            | data; input '2\n'                          |                                                | Exited normally                                | Passed
+49   | CRLF and comments            | generated/windows; input '1\n7\nRoom       | departments.txt: 2 accepted, 0 rejected; F001  | departments.txt: 2 accepted, 0 rejected; F001  | Passed
+     |                              | #5\n0\n'                                   | | Room #5 | Library | Classroom; Department:   | | Room #5 | Library | Classroom; Department:   |
+     |                              |                                            | Room #5                                        | Room #5                                        |
 
-Build: g++ -std=c++17 -Wall -Iinclude src/*.cpp -o campus
-Run:   ./campus
+Result: 49/49 passed. Starter data unchanged.
 
-Use fresh sample data for tests that expect fixed child counts.
-Options: 6 = Add, 7 = Search, 8 = Hierarchy, 9 = Preorder.
-
-#   | Test                   | Input                           | Expected                                | Actual           | Pass/Fail
-----+------------------------+---------------------------------+-----------------------------------------+------------------+-------------
-1   | Load sample tree       | Sample departments.txt          | 7 accepted, 0 rejected                  | -                | Not tested
-2   | Blank/comment lines    | Blank lines and # comments      | Skip lines; do not count as rejected    | -                | Not tested
-3   | Wrong field count      | Missing or extra field          | Reject; show filename, line and reason  | -                | Not tested
-4   | Missing file           | No departments.txt              | Show file error; continue without crash | -                | Not tested
-5   | Invalid root           | First record: School|Missing    | Reject; first root needs parent NONE    | -                | Not tested
-6   | Unknown parent         | Biology|Missing                 | Reject; tree stays unchanged            | -                | Not tested
-7   | Parent appears later   | Child listed before parent      | Reject; parent must be accepted first   | -                | Not tested
-8   | Second root            | School|NONE after University    | Reject; keep the existing root          | -                | Not tested
-9   | Duplicate department   | university after University     | Reject; keep first accepted record      | -                | Not tested
-10  | Empty field            | Biology| or |University         | Reject; show filename, line and reason  | -                | Not tested
-11  | Empty tree             | Options 8 and 9; no departments | Show clear empty-tree messages          | -                | Not tested
-12  | Add root               | Option 6; empty tree; School    | Add root without asking for a parent    | -                | Not tested
-13  | Root-only search       | Option 7; School                | Parent None; children 0; depth 0        | -                | Not tested
-14  | Root-only traversal    | Options 8 and 9                 | Show School only                        | -                | Not tested
-15  | Add department         | Biology under University        | Add Biology as a child of University    | -                | Not tested
-16  | Add unknown parent     | Biology under Missing           | Show error; tree stays unchanged        | -                | Not tested
-17  | Add duplicate          | Add University again            | Show duplicate error; no new node       | -                | Not tested
-18  | Search sample root     | Option 7; University            | Parent None; children 2; depth 0        | -                | Not tested
-19  | Search sample child    | Option 7; Computer Science      | Parent: College of Engineering;         | -                | Not tested
-    |                        |                                 | children 0; depth 2                     |                  |
-20  | Case and spaces        | " computer SCIENCE "            | Find Computer Science                   | -                | Not tested
-21  | Missing department     | Option 7; Missing               | Show not found; return to menu          | -                | Not tested
-22  | Name with spaces       | Add Data Science under College  | Accept full name; search finds it       | -                | Not tested
-    |                        | of Science                      |                                         |                  |
-23  | Blank name             | Blank name when                 | Show error; return to menu              | -                | Not tested
-    |                        | adding/searching                |                                         |                  |
-24  | Blank parent           | Add child with blank parent     | Show error; tree stays unchanged        | -                | Not tested
-25  | Display hierarchy      | Option 8; sample tree           | Preorder; four spaces per depth;        | -                | Not tested
-    |                        |                                 | sibling insertion order                 |                  |
-26  | Preorder traversal     | Option 9; sample tree           | Show sequence below, no indentation     | -                | Not tested
-27  | More than 2 children   | Add third child to University   | Accept; general tree allows it          | -                | Not tested
-28  | Memory-only addition   | Add Biology; restart program    | Biology not saved; file unchanged       | -                | Not tested
-29  | Recovery after error   | Invalid add, then valid search  | Search works; menu continues            | -                | Not tested
-
-Expected sample hierarchy:
-
-University
-    College of Engineering
-        Computer Science
-        Electrical Engineering
-    College of Science
-        Mathematics
-        Physics
-
-Expected sample preorder:
-
-University -> College of Engineering -> Computer Science ->
-Electrical Engineering -> College of Science -> Mathematics -> Physics
-
-
-############################################################################################################################################################
-
-TEST RESULTS - Milestone 1
-Member A (Matthew Htang): Hash table and ID search
-The following table is rough data inputs, its expected value and checking whether they are passed or failed
-
-Use this comand line to test the program : g++ -std=c++17 -Wall -Iinclude src/*.cpp -o campus
-                                         : ./campus (run this if you want to test with txt files from data folder)
-                                         
-                                         (run this if you want to test with txt files from collision folder)
-                                         : ./campus testdata/collision 
-
-#  | Test                | Input              | Expected                        | Actual                               | Pass/Fail
----+---------------------+--------------------+---------------------------------+--------------------------------------+-------------
-1  | Load sample data    | ./campus           | 10 accepted, 0 rejected,        | 10 accepted, 0 rejected, 1 collision | Passed    
-   |                     |                    | collisions 1                    |    
-2  | ID found            | F004               | Found: Computer Lab A           |    Found : Computer Lab A            | Passed    
-3  | Lowercase ID        | f004               | Same as test 2                  |    the same as test 2                | Passed    
-4  | Invalid ID          | 004                | Invalid format message          |        Invalid format                | Passed
-5  | ID not found        | F999               | Not found: F999                 |        Not found                     | Passed
-6  | Blank ID            | just press enter   | Error, back to menu             |  Error: ID cannot be blank           | Passed
-7  | Hash collision      | ./campus           | 2 accepted, 1 rejected,         |  10 accepted, 0 rejected, 1 collision| Failed
-   |                     | testdata/collision | collisions 1                    |              -                       | Failed
-8  | Duplicate ID        | f001 in collision  | Rejected, collisions stays 1    |              -                       | Failed
-
-*Note: for some reason, i can not load my test txt files from collision folder in here, without changing the code. 
-Therefore all the tests with txt files from collision all failed for this milestone (we'll take alook if we still have time).
-
-
-========================================
- MEMBER B - CAMPUS GRAPH AND BFS TESTING
-========================================
-
-Tested by: Alka Gurung
-Environment: UNT CELL18
-
-Test 1: Campus Graph Display - PASS
-7 buildings and 6 connections displayed correctly.
-
-Test 2: Graph Counts and Degrees - PASS
-7 buildings, 6 connections, all degrees correct.
-
-Test 3: BFS from Library - PASS
-6 of 7 buildings reachable with correct distances.
-
-Test 4: BFS from Observatory - PASS
-Only Observatory reachable, distance 0.
-
-Test 5: Invalid Building Name - PASS
-UnknownBuilding displayed an error without crashing.
-
-Test 6: Lowercase Building Name - PASS
-library recognized correctly, 6 of 7 reachable.
-
-SUMMARY: ALL 6 TESTS PASSED
+Historical evidence: Alka reported six graph/BFS checks passing on UNT CELL18 in the earlier repository test record. That run is not a rerun of this revision.
+Remaining: compile/run this final combined revision on CELL; verify collaborator access and meaningful commits; match final ZIP to GitHub with no executables.

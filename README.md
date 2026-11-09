@@ -155,7 +155,7 @@ To compile and run the project, users need:
 
 A C++17-compatible compiler, such as G++.
 
-Visual Studio Code or another C++ development environment.
+Optional: Visual Studio Code or another editor.
 
 A terminal or command prompt.
 
@@ -296,3 +296,36 @@ The team uses GitHub for version control, collaboration, code integration, and t
 University of North Texas
 CSCE 2110 – Foundations of Data Structures
 Smart Campus Navigation and Facility Analytics System
+## Milestone 1: Linux, macOS, and CELL
+
+Run these commands from the project root:
+
+```sh
+g++ -std=c++17 -Wall -Wextra -Iinclude src/*.cpp -o campus
+./campus
+./campus testdata/collision
+```
+
+The default input folder is `data/`, relative to the working directory.
+The optional first argument selects another folder containing the four input
+files. Loading order is buildings, connections, facilities, then departments.
+Do not change the instructor files in `data/`; put custom cases in `testdata/`.
+
+Menu: 1 facilities, 2 ID search, 3 graph, 4 degrees, 5 BFS, 6 add department,
+7 search department, 8 hierarchy, 9 preorder, and **0 Exit**.
+Department additions last only until the program exits.
+
+Run the automated local checks (Python 3 is needed only for this test script):
+
+```sh
+python3 tests/run_m1_tests.py
+```
+
+`test_results.txt` records the latest local run. Alka's earlier CELL18 graph
+results are historical evidence; the final combined revision must still be
+compiled and tested on CELL before submission.
+
+The required submission copies are `README.txt` and `CONTRIBUTIONS.txt`.
+Keep them synchronized with the Markdown versions when editing documentation.
+Before submission, commit the final sources and documents, verify each member's
+contributions, and create a matching ZIP without executables or editor files.

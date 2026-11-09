@@ -50,7 +50,7 @@ bool HashTable::insert(const string &key, int index)
 {
 
     // first convert the key into uppercase and store it in normalized
-    string normalized = toUpper(key); // "f101" -> "F101"
+    string normalized = normalizeId(key); // "f101" -> "F101"
 
     // Get that normalized facility id's index and store it into b
     int b = hashFunction(normalized); // eg, b = 3
@@ -60,7 +60,7 @@ bool HashTable::insert(const string &key, int index)
     //  This look confusing, but this first go to that nested vector array
     //  and check if any of those the same with what we are going to add,
     //  (which is store in normalized)
-    for (int i = 0; i < buckets[b].size(); i++)
+    for (size_t i = 0; i < buckets[b].size(); i++)
     {
         if (buckets[b][i].key == normalized)
         {
@@ -87,14 +87,14 @@ int HashTable::find(const string &key) const // Bugs fixed (bool -> int - Matthe
 {
 
     // Convert the key(f101) into capital letter
-    string normalized = toUpper(key);
+    string normalized = normalizeId(key);
 
     // Get that bucket index number
     int b = hashFunction(normalized);
 
     // for loop to get the key(facility id) and compare it with the
     // the input, eg(F010 = F010?)-> return its index
-    for (int i = 0; i < buckets[b].size(); i++)
+    for (size_t i = 0; i < buckets[b].size(); i++)
     {
         if (buckets[b][i].key == normalized)
         {
