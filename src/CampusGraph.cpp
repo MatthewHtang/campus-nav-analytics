@@ -1,3 +1,12 @@
+ /*
+ * @Author: Alka Gurung
+ * @Date: 2026-11-08
+ * @Last Modified: 2026-11-08
+ *
+ * This file contains the implementation of the CampusGraph
+ * class, including adding buildings, managing connections,
+ * displaying graph information, and BFS reachability.
+ */
 #include "CampusGraph.h"
 #include "Utils.h"
 

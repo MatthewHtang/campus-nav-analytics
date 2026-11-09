@@ -1,3 +1,12 @@
+/*
+ * @Author: Alka Gurung
+ * @Date: 2026-11-08
+ * @Last Modified: 2026-11-08
+ *
+ * This header file contains the declaration of the
+ * CampusGraph class and its functions for managing
+ * campus buildings and connections.
+ */
 #ifndef CAMPUSGRAPH_H
 #define CAMPUSGRAPH_H
 
