@@ -72,6 +72,14 @@ void FacilityDatabase::load(const std::string &dataDir, const CampusGraph &graph
             rejected ++; // Count the reject
             continue;
         }
+        // Reuse category spelling from the first accepted facility.
+        for (const Facility& existing : facilities) {
+            if (equalsIgnoreCase(existing.getCategory(), category)) {
+                category = existing.getCategory();
+                break;
+            }
+        }
+
         //After all check passed, store it at exactly the index the table recorded
         facilities.push_back(Facility(id, name, building, category));
     }
