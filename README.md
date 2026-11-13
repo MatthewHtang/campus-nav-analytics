@@ -301,7 +301,7 @@ Smart Campus Navigation and Facility Analytics System
 Run these commands from the project root:
 
 ```sh
-g++ -std=c++17 -Wall -Wextra -Iinclude src/*.cpp -o campus
+g++ -std=c++11 -Wall -Iinclude src/*.cpp -o campus
 ./campus
 ./campus testdata/collision
 ```

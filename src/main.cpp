@@ -8,9 +8,21 @@
 #include "DepartmentTree.h"
 #include "Utils.h"
 
-#include <stdlib.h>
+#include "Screen.h"
 
 using namespace std;
+
+/**
+ * We need to build a helper function here:
+ * If the user type a string input where our variables
+ * expect for int input, and also to clear a buffer like java, 
+ * We need a method that flushes and wipe out all the 
+ * input pipe.
+ */
+
+ void clearInput(){
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); }
 
 int main(int argc, char* argv[]) {
     // Use data by default, or the folder given on the command line.
@@ -25,9 +37,13 @@ int main(int argc, char* argv[]) {
     db.load(dataDir, graph);
     departments.loadDepartments(dataDir);
 
-    int choice;
+    pauseScreen(); // This let the user first see the load summary first
+
+    int choice = 0;
 
     do {
+        clearScreen(); // Clean screen and show the menu
+    
         cout << "\n";
         cout << "\033[32m" << "=============================================================\n";
         cout << "\033[32m" << "   Smart Campus Navigation and Facility Analytics System\n";
@@ -52,73 +68,103 @@ int main(int argc, char* argv[]) {
         cout << "\033[32m" << "|                 18. Exit                                  |\n";
         cout << "\033[32m" << "=============================================================\n";
         cout << "\033[0m";
-        cout << "                                Enter Choice: \n";
-        
-        cin >> choice;
-        cin.ignore();
+        cout << "                  Enter Choice: ";
 
-        // Facility menu options
-        if (choice == 1) {
+        cin >> choice;
+
+        //What if the user put a string instead
+        if (cin.fail()){
+            clearInput();
+            cout << "Error: enter a valid number" << endl;
+            continue;
+        }
+        clearInput();
+
+        switch(choice){
+            case 1:
             db.displayAll();
-        }
-        else if (choice == 2) {
-            string input = promptLine("Enter Facility ID: ");
-            db.searchById(input);
-        }
-        else if (choice == 3) {
-            //call your function accoriding to the menu
-        }
-        else if (choice == 4) {
-            //call your function accoriding to the menu
-        }
-        else if (choice == 5) {
+            break;
+
+            case 2: {
+                string input = promptLine("Enter Facility ID: ");
+                db.searchById(input);
+            }
+
+            case 3:
+            //Call your function according to the menu
+            break;
+
+            case 4:
+            //Call your function according to the menu
+            break;
+
+            case 5:
             graph.displayGraph();
-        }
-        else if (choice == 6) {
+            break;
+
+            case 6:
             graph.displayStatistics();
-        }
-        else if (choice == 7) {
-            string startBuilding = promptLine("Enter starting building: ");
-            graph.bfs(startBuilding);
-        }
-        else if (choice == 8) {
-            //call your function accoriding to the menu
-        }
-        else if (choice == 9) {
-            // The first department becomes the root without a parent prompt.
+            break;
+
+            case 7: {
+                string startBuilding = promptLine("Enter starting building: ");
+                graph.bfs(startBuilding);
+            }
+            
+            case 8:
+            //Call your function according to the menu
+            break;
+
+            case 9:
             departments.addDepartmentFromInput();
-        }
-        else if (choice == 10){
-            string departmentName = promptLine("Enter department name: ");
-            departments.searchDepartment(departmentName);
-        }
-        else if (choice == 11) {
-            // Show the hierarchy with four spaces for each depth.
+            break;
+
+            case 10: {
+                string departmentName = promptLine("Enter department name: ");
+                departments.searchDepartment(departmentName);
+                break;
+            }
+            
+            case 11:
             departments.displayHierarchy();
-        }
-        else if (choice == 12) {
-            // Visit each parent before its children.
+            break;
+
+            case 12:
             departments.displayPreorder();
-        }
-        else if (choice == 13) {
+            break;
+
+            case 13:
             //call your function accoriding to the menu
-        }
-        else if (choice == 14) {
+            break;
+
+            case 14:
             //call your function accoriding to the menu
-        }
-        else if (choice == 15) {
-           //call your function accoriding to the menu
-        }
-        else if (choice == 16) {
+            break;
+
+            case 15:
             //call your function accoriding to the menu
-        }
-        else if (choice == 17) {
+            break;
+
+            case 16:
             //call your function accoriding to the menu
-        }
-        else{
+            break;
+
+            case 17:
+            //call your function accoriding to the menu
+            break;
+
+            case 18:
+            cout << "exiting the program" << endl;
+            break;
+
+            default:
             cout << "Error: enter a valid number" << endl;
         }
-        
+
+        // Wait here so the user can read the result
+        if (choice != 18){
+            pauseScreen();
+        }
     } while (choice != 18);
 
     return 0;
