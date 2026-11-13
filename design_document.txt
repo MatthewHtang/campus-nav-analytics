@@ -21,6 +21,8 @@ Capacity limits buckets, not records. Chains grow dynamically; there is no
 fixed full-table rejection. Construction clamps a nonpositive capacity to 1
 and allocates that many buckets. The table does not rehash or resize later.
 
+-------------------------------------------------------------------------------------------
+
 4. Graph (Alka, with shared loading work)
 CampusGraph stores building names and a vector of neighbor lists. An adjacency
 list is suitable because each building connects to relatively few others;
@@ -29,6 +31,8 @@ Each walkway is saved at both endpoints but counted once. Duplicate/reversed
 edges, self-connections, and unknown endpoints are rejected. All graph
 features use this same representation. BFS uses a queue and marks a building
 visited when enqueued. The start has distance 0 and counts as reachable.
+
+-------------------------------------------------------------------------------------------
 
 5. Department tree (Sankalp)
 DepartmentNode stores a name, parent pointer, depth, and vector of child
@@ -54,3 +58,5 @@ main.cpp: coordinates ordered loading and menu choices 0 through 9.
 7. Scope
 Postorder, level-order, statistics, shortest paths, and reports are Final
 features. Their existing code is not required to finish Milestone 1.
+
+-------------------------------------------------------------------------------------------

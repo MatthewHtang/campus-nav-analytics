@@ -78,12 +78,4 @@ string formatPercent(int count, int total);
 // Read a whole trimmed line, allowing names with spaces.
 string promptLine(const string& prompt);
 
-// Read a numeric menu choice from one complete line.
-// Returns -1 for invalid input and eofChoice when input reaches EOF.
-int readMenuChoice(
-    const string& prompt,
-    int minChoice,
-    int maxChoice,
-    int eofChoice);
-
 #endif
