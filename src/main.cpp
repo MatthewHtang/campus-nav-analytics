@@ -81,18 +81,24 @@ int main(int argc, char* argv[]) {
         clearInput();
 
         switch(choice){
+
+            //View all facilities
             case 1:
             db.displayAll();
             break;
-
+            
+            //Search facility by ID
             case 2: {
                 string input = promptLine("Enter Facility ID: ");
                 db.searchById(input);
             }
 
-            case 3:
-            //Call your function according to the menu
-            break;
+            //Search facility by Name
+            case 3: {
+                string input = promptLine("Enter Facility Name: ");
+                db.searchByName(input);
+                break;
+            }
 
             case 4:
             //Call your function according to the menu
