@@ -146,3 +146,27 @@ void FacilityDatabase::searchById(const string& input) const{
 int FacilityDatabase::getCount() const{
     return facilities.size();
 }
+
+// Scans all facilities in file order and prints every exact name match while ignoring case
+void FacilityDatabase::searchByName(const std:: string& input) const{
+    string target = trim(input);    //store the trimmed input into target
+
+    if (target.empty()){    //If its blank
+        cout<< "Error: facility name cannot be blank." << endl;
+        return;
+    }
+
+    int count = 0;
+    for (const Facility& f : facilities){
+        //User input and the name from facilities is compare in here using getter
+        if (equalsIgnoreCase(f.getName(), target)){     
+            f.print();
+            count ++;
+        }
+    }
+    if (count == 0){    //If count is still 0, then no facilities is found
+        cout << "No facilities found with name " << target << "." << endl;
+    }
+    cout << "Matches: " << count << endl;   //Print how many of the names are match
+
+}

@@ -41,6 +41,9 @@
 
     //This return howmany facilities were accepted
     int getCount() const;
+
+    //This will search by name
+    void searchByName(const std:: string& input) const;
  };
 
 
