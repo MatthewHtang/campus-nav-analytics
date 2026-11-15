@@ -32,6 +32,8 @@ int main(int argc, char* argv[]) {
     DepartmentTree departments;
 
     // Buildings must load before connections and facilities.
+    cout <<"\n_____Overall Data Load Summary_____ " << endl; // Newline for clearity
+
     graph.loadBuildings(dataDir);
     graph.loadConnections(dataDir);
     db.load(dataDir, graph);
@@ -91,6 +93,7 @@ int main(int argc, char* argv[]) {
             case 2: {
                 string input = promptLine("Enter Facility ID: ");
                 db.searchById(input);
+                break;
             }
 
             //Search facility by Name
@@ -100,9 +103,12 @@ int main(int argc, char* argv[]) {
                 break;
             }
 
-            case 4:
-            //Call your function according to the menu
-            break;
+            //Search facility by category
+            case 4: {
+                string input = promptLine("Enter Facility Category: ");
+                db.searchByCategory(input);
+                break;
+            }
 
             case 5:
             graph.displayGraph();

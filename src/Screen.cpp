@@ -10,7 +10,7 @@ void clearScreen() {
     #ifdef _WIN32
     system("cls");
 
-    #else:
+    #else
     system("clear");
 
     #endif
