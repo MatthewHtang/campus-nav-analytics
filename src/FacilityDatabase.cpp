@@ -148,7 +148,7 @@ int FacilityDatabase::getCount() const{
 }
 
 // Scans all facilities in file order and prints every exact name match while ignoring case
-void FacilityDatabase::searchByName(const std:: string& input) const{
+void FacilityDatabase::searchByName(const std::string& input) const{
     string target = trim(input);    //store the trimmed input into target
 
     if (target.empty()){    //If its blank
@@ -169,4 +169,30 @@ void FacilityDatabase::searchByName(const std:: string& input) const{
     }
     cout << "Matches: " << count << endl;   //Print how many of the names are match
 
+}
+
+// This scans all the facilities with their category
+void FacilityDatabase::searchByCategory(const std::string& input) const{
+    string target = trim(input);    //Store the trimmed text into target
+
+    //If the imput is empty then print error message
+    if (target.empty()){
+        cout << "Error: facility category cannot be blank." << endl;
+        return;
+    }
+
+    int count = 0; //Set a counter for later, to show how many category are match
+    for (const Facility& f : facilities){
+        //if the user input category is the same as the category from facilities,
+        //then print that string
+        if (equalsIgnoreCase(f.getCategory(), target)){
+            f.print();
+            count ++;
+        }
+    }
+    //If the counter is not counting, then no catogery is found in that facilities
+    if (count == 0){
+        cout << "No facilities found with category name " << target << "." << endl;
+    }
+    cout << "Matches: " << count << endl; //Print how many of the search by cateogry are the same
 }

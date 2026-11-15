@@ -43,7 +43,10 @@
     int getCount() const;
 
     //This will search by name
-    void searchByName(const std:: string& input) const;
+    void searchByName(const std::string& input) const;
+
+    //This will search by the category
+    void searchByCategory(const std::string& input) const;
  };
 
 
