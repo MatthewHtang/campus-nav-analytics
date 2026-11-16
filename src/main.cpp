@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
     DepartmentTree departments;
 
     // Buildings must load before connections and facilities.
-    cout <<"\n_____Overall Data Load Summary_____ " << endl; // Newline for clearity
+    cout <<"\n_____Overall Data Loading Status_____\n" << endl; // Newline for clearity
 
     graph.loadBuildings(dataDir);
     graph.loadConnections(dataDir);
