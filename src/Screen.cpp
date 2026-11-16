@@ -17,7 +17,7 @@ void clearScreen() {
 }
 
 void pauseScreen() {
-    cout <<"\nPress Enter to continue .....";
+    cout <<"\033[32m" << "\nPress Enter to continue .....";
     string pause;
     getline(cin, pause);
 }
