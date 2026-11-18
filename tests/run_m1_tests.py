@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build and check M1 in temporary folders; --record writes test_results.txt."""
+"""Build and check M1 in temporary folders; --record writes automated_test_results.txt."""
 from pathlib import Path
 import subprocess
 import tempfile
@@ -138,7 +138,7 @@ def main():
         report += '\n\nResult: ' + str(len(RESULTS)-failures) + '/' + str(len(RESULTS)) + ' passed. Starter data unchanged.\n'
         report += '\nHistorical evidence: Alka reported six graph/BFS checks passing on UNT CELL18 in the earlier repository test record. That run is not a rerun of this revision.\n'
         report += 'Remaining: compile/run this final combined revision on CELL; verify collaborator access and meaningful commits; match final ZIP to GitHub with no executables.\n'
-        (ROOT/'test_results.txt').write_text(report)
+        (ROOT/'automated_test_results.txt').write_text(report)
     if failures:
         raise SystemExit(1)
 
