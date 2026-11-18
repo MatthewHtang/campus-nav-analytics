@@ -1,6 +1,10 @@
-MILESTONE 1 DESIGN
+-------------------------------------------------------------------------------------------
+                                        DESIGN DOCUMENT
+-------------------------------------------------------------------------------------------
 
-1. Custom hash table (Matthew)
+@MatthewHtang
+
+1. Custom hash table
 Facility IDs are trimmed and converted to uppercase before use. Valid IDs
 are F followed by three digits. Starting at h = 0, each character c updates:
     h = (h * 31 + c) % capacity
@@ -20,6 +24,27 @@ a lowercase duplicate f001: expected entries 2, rejected 1, collisions 1.
 Capacity limits buckets, not records. Chains grow dynamically; there is no
 fixed full-table rejection. Construction clamps a nonpositive capacity to 1
 and allocates that many buckets. The table does not rehash or resize later.
+
+4. Search Facility
+There are several options available for searching facilities in this system.
+Search facility by ID (searchById), search by category (searchByCategory), 
+and search by name (searchByName). These functions are build in FacilityDatabase.cpp
+and each function finds the facility by name, id and category. The function searchById()
+use a hashtable we just build to get the bucket number, it never scan the whole list.
+On the other hand, searchByName() scans every facility while ignoring case and 
+searchByCategory() scans and compare the category(the specific code can be found
+in line 189 in FacilityDatabase.cpp). 
+
+5. Category Report 
+This function basically scan the facilities once and count each category in two
+parallel vectors(Line 216, 217 in FacilityDatabase.cpp), one is for the names, 
+and one is for the count. When the tallies(counter) sees a category for the first time,
+it adds the name to the list and count 1. When it sees again, it adds 1 to the existing 
+count. Capitalization is ignore in here. The report print each category's count and 
+the percentage of all facilities and rounded to one decimal place. For example, 3 classrooms
+out of 10 facilities is 30%. If no facilities were loaded, then it prints a message that
+says total of 0. Then it skips the percentage calculation because you cannot divide the 
+count with 0. 
 
 -------------------------------------------------------------------------------------------
 
