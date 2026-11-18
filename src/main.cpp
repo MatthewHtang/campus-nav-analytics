@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
         cout << "\033[32m" << "|                 18. Exit                                  |\n";
         cout << "\033[32m" << "=============================================================\n";
         cout << "\033[0m";
-        cout << "                  Enter Choice: ";
+        cout << "\t\tEnter Choice: ";
 
         cin >> choice;
 
@@ -157,8 +157,9 @@ int main(int argc, char* argv[]) {
             //call your function accoriding to the menu
             break;
 
+            //Facility Category Report
             case 16:
-            //call your function accoriding to the menu
+            db.categoryReport();
             break;
 
             case 17:
@@ -166,7 +167,7 @@ int main(int argc, char* argv[]) {
             break;
 
             case 18:
-            cout << "exiting the program" << endl;
+            cout << "\033[32m" << ">>>>>>>>>> exiting the program <<<<<<<<<" << endl;
             break;
 
             default:

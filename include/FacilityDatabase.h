@@ -47,6 +47,10 @@
 
     //This will search by the category
     void searchByCategory(const std::string& input) const;
+
+    //This facility category report will report count
+    // and percentage for each category 
+    void categoryReport() const;
  };
 
 

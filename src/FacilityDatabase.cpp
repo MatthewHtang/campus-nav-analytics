@@ -9,6 +9,7 @@
 
 #include "FacilityDatabase.h"
 #include "Utils.h"
+#include <iomanip>
 #include <iostream>
 
 using namespace std;
@@ -196,3 +197,68 @@ void FacilityDatabase::searchByCategory(const std::string& input) const{
     }
     cout << "Matches: " << count << endl; //Print how many of the search by cateogry are the same
 }
+
+//Print each category's count and the percentage of all facilities
+void FacilityDatabase::categoryReport()const {
+    int total = facilities.size(); // Store the total size of the facilities
+
+    //if its empty print the message
+    if (total == 0){
+        cout << "No facilities are available." << endl;
+        cout << "Total: 0" << endl;
+        return;
+    }
+
+    /*
+    Since we need to store those names and counts in array 
+    and align each name properly with its counts
+    */
+   vector<string>categoryNames; //Vector array for storing category name
+   vector<int>categoryCounts; // This vector array store the count
+
+   // Again we access each Facility in facilities as a readonly reference (f) without copying or modifying it
+   for (const Facility& f: facilities) {    
+    bool found = false;
+    
+    for(int i = 0; i < categoryNames.size(); i ++){
+        //Compare the categories
+        if (equalsIgnoreCase(categoryNames[i], f.getCategory())){
+            categoryCounts[i] ++; //increment the count
+            found = true;
+            break;
+        }
+    }
+    //After searching: first time seeing this category, so add it to the array
+    if(!found){
+        categoryNames.push_back(f.getCategory());
+        categoryCounts.push_back(1);
+    }
+   }
+
+   //Print the category report
+   //The title heading
+   cout << "\n____________Facility_Category_Report____________" << endl;
+
+   //iomanip allow us to use properly formatted table 
+   cout << left 
+   << setw(28) << "Category"    //setw() is basically saying we have 28 invisible character apart
+   << setw(10) << "Count"
+   << "Percentage" << "\n";
+
+   for (int i = 0; i < categoryNames.size(); i ++){ //Iterate through each category and calculate each percentage
+    //Calculating the percentage
+    double percent = categoryCounts[i] * 100.0 / total;
+
+    //The actual data printing in the table using iomanip library
+    cout << left
+    << setw(28) << categoryNames[i]
+    << setw(10) << categoryCounts[i]
+    << fixed << setprecision(1) << percent << "%" << endl;
+   }
+
+   cout << left 
+   << setw(28) << "Total"
+   << setw(10) << total 
+   << "100.0%" << endl;
+}
+
