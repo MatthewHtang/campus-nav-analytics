@@ -26,4 +26,4 @@
 Sankalp: connected menu options 13 (postorder), 14 (level-order), and 15
 (department statistics) to the existing DepartmentTree functions. Verified
 sample, empty, root-only, and branching trees locally: 12/12 checks passed.
-Details are in member_c_final_test_results.txt. Final CELL testing is pending.
+Details are in the Member C Final section of test_results.txt. Final CELL testing is pending.
