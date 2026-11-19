@@ -177,17 +177,16 @@ Step 3: Compile the Program
 
 From the project root, run:
 
-g++ -std=c++17 -Iinclude src/*.cpp -o campus_nav.exe
-
+g++ -std=c++17 -Iinclude src/*.cpp -o campus
 Step 4: Run the Program
 
 Using MSYS2:
 
-./campus_nav.exe
+./campus
 
 Using Windows PowerShell:
 
-.\campus_nav.exe
+.\campus
 
 The program will display a menu where users can select different campus management features.
 
