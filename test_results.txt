@@ -120,8 +120,9 @@ SUMMARY: ALL 6 TESTS PASSED
 
 
 ============================================================
-MEMBER C (SANKALP) - FINAL PROJECT TEST RESULTS
-Local run: 2026-11-18, macOS, C++17. CELL testing is still pending.
+Member C (Sankalp) - Final tests
+Date: November 18, 2026
+Environment: macOS, C++17
 
 Build: g++ -std=c++17 -Wall -Wextra -pedantic -Iinclude src/*.cpp -o campus
 Run: ./campus [data-directory]
@@ -129,19 +130,19 @@ For each case: Enter at startup, 13, Enter, 14, Enter, 15, Enter, 18.
 The current shared menu uses 18 to exit; the assignment requires 0.
 
 FC01. Sample - Postorder
-Input: the unchanged sample files in data/; menu option 13.
+Input: sample files in data/; menu option 13.
 Expected: Postorder: Computer Science -> Electrical Engineering -> College of Engineering -> Mathematics -> Physics -> College of Science -> University
 Actual: Postorder: Computer Science -> Electrical Engineering -> College of Engineering -> Mathematics -> Physics -> College of Science -> University
 Result: Passed
 
 FC02. Sample - Level-order
-Input: the unchanged sample files in data/; menu option 14.
+Input: sample files in data/; menu option 14.
 Expected: Level-order: University -> College of Engineering -> College of Science -> Computer Science -> Electrical Engineering -> Mathematics -> Physics
 Actual: Level-order: University -> College of Engineering -> College of Science -> Computer Science -> Electrical Engineering -> Mathematics -> Physics
 Result: Passed
 
 FC03. Sample - Statistics
-Input: the unchanged sample files in data/; menu option 15.
+Input: sample files in data/; menu option 15.
 Expected: Total departments: 7; Leaf departments: 4; Tree height: 2
 Actual: Total departments: 7; Leaf departments: 4; Tree height: 2
 Result: Passed
@@ -183,19 +184,19 @@ Actual: Total departments: 1; Leaf departments: 1; Tree height: 0
 Result: Passed
 
 FC10. Branching - Postorder
-Input: the branching department records listed below; other input files empty; menu option 13.
+Input: branching tree shown below; other input files empty; menu option 13.
 Expected: Postorder: Last -> Deep -> First -> Second -> Third -> Root
 Actual: Postorder: Last -> Deep -> First -> Second -> Third -> Root
 Result: Passed
 
 FC11. Branching - Level-order
-Input: the branching department records listed below; other input files empty; menu option 14.
+Input: branching tree shown below; other input files empty; menu option 14.
 Expected: Level-order: Root -> First -> Second -> Third -> Deep -> Last
 Actual: Level-order: Root -> First -> Second -> Third -> Deep -> Last
 Result: Passed
 
 FC12. Branching - Statistics
-Input: the branching department records listed below; other input files empty; menu option 15.
+Input: branching tree shown below; other input files empty; menu option 15.
 Expected: Total departments: 6; Leaf departments: 3; Tree height: 3
 Actual: Total departments: 6; Leaf departments: 3; Tree height: 3
 Result: Passed
@@ -208,14 +209,5 @@ Third|Root
 Deep|First
 Last|Deep
 
-Empty: all four files empty. Root only: departments.txt contains School|NONE; other files empty.
-
-Result: 12/12 checks passed. Two existing signed/unsigned warnings in FacilityDatabase.cpp remain outside Member C scope.
-
-Final verification still required:
-- Run the current combined project on CELL and record the actual outcomes.
-- The earlier Member C Milestone 1 table is preserved as historical work;
-  its Not tested entries are not passes. Recheck those requirements for Final.
-- Final department menu numbers: 9 add, 10 search, 11 hierarchy,
-  12 preorder, 13 postorder, 14 level-order, 15 statistics.
-- The assignment requires Exit 0; the recorded run used the current Exit 18.
+Summary: All 12 tests passed locally.
+Still to do: run these tests on CELL and complete the earlier untested department cases.
