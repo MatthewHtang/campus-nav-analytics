@@ -1,11 +1,18 @@
-TEST RESULTS - Milestone 1
+____________________________________________________________ TEST RESULTS ____________________________________________________________
+
+The following table is rough data inputs, its expected value and checking whether they are passed or failed
+
+Use this comand line to test the program : g++ -std=c++17 -Wall -Iinclude src/*.cpp -o campus
+                                         : ./campus (run this if you want to test with txt files from data folder)
+                                         
+                                         (run this if you want to test with txt files from collision folder)
+                                         : ./campus testdata/collision 
+
+____________________________________________________________________________________________________________________________________________
 Member C (Sankalp): Department Tree
 
 The table lists test inputs, expected results, actual results, and pass/fail.
 Actual results are not recorded yet. Run each test before marking it Passed.
-
-Build: g++ -std=c++17 -Wall -Iinclude src/*.cpp -o campus
-Run:   ./campus
 
 Use fresh sample data for tests that expect fixed child counts.
 Options: 6 = Add, 7 = Search, 8 = Hierarchy, 9 = Preorder.
@@ -62,35 +69,56 @@ University -> College of Engineering -> Computer Science ->
 Electrical Engineering -> College of Science -> Mathematics -> Physics
 
 
-############################################################################################################################################################
+____________________________________________________________________________________________________________________________________________
 
-TEST RESULTS - Milestone 1
-Member A (Matthew Htang): Hash table and ID search
-The following table is rough data inputs, its expected value and checking whether they are passed or failed
+========================================
+Member A - Hash table and ID search
+========================================
 
-Use this comand line to test the program : g++ -std=c++17 -Wall -Iinclude src/*.cpp -o campus
-                                         : ./campus (run this if you want to test with txt files from data folder)
-                                         
-                                         (run this if you want to test with txt files from collision folder)
-                                         : ./campus testdata/collision 
+Tested by: Matthew Htang
+Environment: macOS
 
 #  | Test                | Input              | Expected                        | Actual                               | Pass/Fail
 ---+---------------------+--------------------+---------------------------------+--------------------------------------+-------------
-1  | Load sample data    | ./campus           | 10 accepted, 0 rejected,        | 10 accepted, 0 rejected, 1 collision | Passed    
-   |                     |                    | collisions 1                    |    
-2  | ID found            | F004               | Found: Computer Lab A           |    Found : Computer Lab A            | Passed    
-3  | Lowercase ID        | f004               | Same as test 2                  |    the same as test 2                | Passed    
-4  | Invalid ID          | 004                | Invalid format message          |        Invalid format                | Passed
-5  | ID not found        | F999               | Not found: F999                 |        Not found                     | Passed
-6  | Blank ID            | just press enter   | Error, back to menu             |  Error: ID cannot be blank           | Passed
-7  | Hash collision      | ./campus           | 2 accepted, 1 rejected,         |  10 accepted, 0 rejected, 1 collision| Failed
-   |                     | testdata/collision | collisions 1                    |              -                       | Failed
-8  | Duplicate ID        | f001 in collision  | Rejected, collisions stays 1    |              -                       | Failed
+1  | Load sample data    | ./campus           | 10 accepted, 0 rejected,        |            same as expected          | Passed    
+   |                     |                    | collisions 1                    |                                      |
+2  | ID found            | F004               | Found: Computer Lab A           |            same as expected          | Passed    
+3  | Lowercase ID        | f004               | Same as test 2                  |            same as expected          | Passed    
+4  | Invalid ID          | 004                | Invalid format message          |            same as expected          | Passed
+5  | ID not found        | F999               | Not found: F999                 |            same as expected          | Passed
+6  | Blank ID            | just press enter   | Error, back to menu             |            same as expected          | Passed
+7  | Hash collision      | ./campus           | 2 accepted, 1 rejected,         |  10 accepted, 0 rejected, 1 collision| Failed <- Apprently, it's still accessing the actual txt files from data
+   |                     | testdata/collision | collisions 1                    |              -                       | Failed <- And not from the custom txt from collision folder
+8  | Duplicate ID        | f001 in collision  | Rejected, collisions stays 1    |              -                       | Failed <-
 
-*Note: for some reason, i can not load my test txt files from collision folder in here, without changing the code. 
-Therefore all the tests with txt files from collision all failed for this milestone (we'll take alook if we still have time).
+*Note: for some reason, loading test txt files from collision folder in failed in here, without changing the code. 
+Therefore all the custom txt files from collision folder are all ignored for this test. Instead, the actual data 
+txt files from data folder was used for this tests.
+
+Final: Facility Searches
+#  | Test                        | Menu | Input            | Expected                          | Actual         | Pass/Fail
+---+-----------------------------+------+------------------+-----------------------------------+----------------+----------
+                                SEARCH BY ID (this uses hash table)
+1  | ID found                    | 2    | F004             | Found: F004 Computer Lab A        |same as expected| Passed
+2  | Lowercase ID                | 2    | f004             | Same as test 1                    |same as expected| Passed
+3  | Not found                   | 2    | F999             | Not found: F999                   |same as expected| Passed
+4  | Blank                       | 2    | (press Enter)    | Error, back to menu               |same as expected| Passed
+
+                                SEARCH BY NAME (this scans vector)
+5  | Name with two matches       | 3    | Room 101         | F005, F007, Matches: 2            |same as expected| Passed
+6  | Name with lowercase         | 3    | room 101         | Matches: 2                        |same as expected| Passed
+7  | Name with extra spaces      | 3    | "  Room 101  "   | Matches: 2                        |same as expected| Passed
+8  | Building, not facility      | 3    | Gym              | Matches: 0                        |same as expected| Passed
+9  | Blank                       | 3    | (press Enter)    | Error, back to menu               |same as expected| Passed
+
+                                SEARCH BY CATEGORY (this scans vector)
+10 | Category with lowercase     | 4    | computer lab     | F004, F006, Matches: 2            |same as expected| Passed
+11 | Partial category            | 4    | Lab              | Matches: 0                        |same as expected| Passed
+12 | Unknown category            | 4    | Cafeteria        | Matches: 0                        |same as expected| Passed
+13 | Blank                       | 4    | (press Enter)    | Error, back to menu               |same as expected| Passed
 
 
+____________________________________________________________________________________________________________________________________________
 ========================================
  MEMBER B - CAMPUS GRAPH AND BFS TESTING
 ========================================
@@ -118,8 +146,8 @@ library recognized correctly, 6 of 7 reachable.
 
 SUMMARY: ALL 6 TESTS PASSED
 
+____________________________________________________________________________________________________________________________________________
 
-============================================================
 Member C (Sankalp) - Final tests
 Date: November 18, 2026
 Environment: macOS, C++17
@@ -211,3 +239,5 @@ Last|Deep
 
 Summary: All 12 tests passed locally.
 Still to do: run these tests on CELL and complete the earlier untested department cases.
+
+____________________________________________________________________________________________________________________________________________
