@@ -21,9 +21,8 @@
 
 - Repository: https://github.com/MatthewHtang/campus-nav-analytics.git
 
-## Member C - Final update (2026-11-18)
+## Sankalp - Final update (November 18, 2026)
 
-Sankalp: connected menu options 13 (postorder), 14 (level-order), and 15
-(department statistics) to the existing DepartmentTree functions. Verified
-sample, empty, root-only, and branching trees locally: 12/12 checks passed.
-Details are in member_c_final_test_results.txt. Final CELL testing is pending.
+Connected postorder, level-order, and department statistics to menu options
+13-15. The sample, empty, root-only, and branching tree tests passed locally.
+Results are in test_results.txt; CELL testing is pending.
