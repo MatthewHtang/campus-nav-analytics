@@ -118,34 +118,7 @@ These data structures allow the program to manage campus information in an organ
 
 ## 5. Project Structure
 
-campus-nav-analytics/
-|
-|-- data/
-|-- include/
-|   |-- CampusGraph.h
-|   |-- DepartmentNode.h
-|   |-- DepartmentTree.h
-|   |-- Facility.h
-|   |-- FacilityDatabase.h
-|   |-- HashTable.h
-|   |-- Utils.h
-|
-|-- src/
-|   |-- CampusGraph.cpp
-|   |-- DepartmentTree.cpp
-|   |-- Facility.cpp
-|   |-- FacilityDatabase.cpp
-|   |-- HashTable.cpp
-|   |-- main.cpp
-|   |-- Utils.cpp
-|
-|-- testdata/
-|-- CONTRIBUTIONS.md
-|-- design_document.txt
-|-- test_results.txt
-|-- README.md
-|-- .gitignore
-|-- LICENSE
+![Project diagram](./img/diagram.png)
 
 The include folder contains header files, while the src folder contains C++ implementations. The data folder contains the input files, and testdata is used for additional testing.
 
@@ -242,51 +215,7 @@ Additional test cases are stored in the testdata folder.
 
 Testing information and recorded results are documented in test_results.txt.
 
-## 10. Team Contributions
-
-Team Member
-
-Responsibilities
-
-Matthew Htang – Member A
-
-Facility management, hash table implementation, utility functions, and main program integration
-
-Alka Gurung – Member B
-
-Campus Graph implementation, adjacency list, building connections, graph statistics, BFS reachability, and README documentation
-
-Sankalp Gupta – Member C
-
-Department tree implementation, department searching, hierarchy, traversals, and shared integration support
-
-All team members collaborate on debugging, testing, and improving the overall project.
-
-For more detailed information about individual contributions, please refer to CONTRIBUTIONS.md.
-
-## 11. Important Note About Repository Recreation
-
-Our team originally worked on a previous GitHub repository, where we made more than 60 commits during project development. However, due to technical issues with the previous repository, we had to create this new repository to continue our work and meet the submission deadline.
-
-As a result, the commit history in this repository may not reflect all the work completed earlier. We have included this note to explain the situation and maintain transparency about our team's contributions.
-
-## 12. Future Improvements
-
-For the final milestone, the project is intended to include additional features such as:
-
-Shortest path between campus buildings.
-
-Graph connectivity analysis.
-
-Additional facility search options.
-
-More department traversal methods.
-
-Expanded department and facility statistics.
-
-Additional testing and documentation.
-
-## 13. GitHub Repository
+## 10. GitHub Repository
 
 Repository: https://github.com/MatthewHtang/campus-nav-analytics
 
