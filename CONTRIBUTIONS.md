@@ -18,9 +18,3 @@
 ---
 
 - Repository: https://github.com/MatthewHtang/campus-nav-analytics.git
-
-## Sankalp - Final update (November 18, 2026)
-
-Connected postorder, level-order, and department statistics to menu options
-13-15. The sample, empty, root-only, and branching tree tests passed locally.
-Results are in test_results.txt; CELL testing is pending.
