@@ -12,8 +12,9 @@
 using namespace std;
 
 // Create an empty tree.
-DepartmentTree::DepartmentTree() : root(nullptr)
+DepartmentTree::DepartmentTree()
 {
+    root = nullptr;
 }
 
 // Free the tree when the program finishes.
@@ -130,7 +131,15 @@ void DepartmentTree::addDepartmentFromInput()
         return;
     }
 
-    string parent = isEmpty() ? "NONE" : promptLine("Parent department: ");
+    string parent;
+    if (isEmpty())
+    {
+        parent = "NONE";
+    }
+    else
+    {
+        parent = promptLine("Parent department: ");
+    }
     string reason;
     if (!addDepartment(name, parent, reason))
     {
@@ -191,7 +200,14 @@ void DepartmentTree::searchDepartment(const string& name) const
         return;
     }
     cout << "Department: " << node->name << endl;
-    cout << "Parent: " << (node->parent ? node->parent->name : string("None")) << endl;
+    if (node->parent == nullptr)
+    {
+        cout << "Parent: None" << endl;
+    }
+    else
+    {
+        cout << "Parent: " << node->parent->name << endl;
+    }
     cout << "Direct children: " << node->children.size() << endl;
     cout << "Depth: " << node->depth << endl;
 }
@@ -199,7 +215,12 @@ void DepartmentTree::searchDepartment(const string& name) const
 // Print one node and then its children, indented 4 spaces per depth (preorder).
 void DepartmentTree::printIndented(const DepartmentNode* node) const
 {
-    cout << string(static_cast<size_t>(node->depth) * 4, ' ') << node->name << endl;
+    // Each level adds four spaces before the department name.
+    for (int level = 0; level < node->depth; level++)
+    {
+        cout << "    ";
+    }
+    cout << node->name << endl;
     for (size_t i = 0; i < node->children.size(); i++)
     {
         printIndented(node->children[i]);
@@ -224,7 +245,11 @@ void DepartmentTree::printSequence(const string& title,
     cout << title << ": ";
     for (size_t i = 0; i < names.size(); i++)
     {
-        cout << (i > 0 ? " -> " : "") << names[i];
+        if (i > 0)
+        {
+            cout << " -> ";
+        }
+        cout << names[i];
     }
     cout << endl;
 }
@@ -294,6 +319,7 @@ void DepartmentTree::displayLevelOrder() const
     pending.push(root);
     while (!pending.empty())
     {
+        // Remove the next department, then add its children to the queue.
         const DepartmentNode* current = pending.front();
         pending.pop();
         order.push_back(current->name);
@@ -320,10 +346,12 @@ void DepartmentTree::displayStatistics() const
     int height = 0;
     for (size_t i = 0; i < nodes.size(); i++)
     {
+        // A leaf has no children.
         if (nodes[i]->children.empty())
         {
             leaves++;
         }
+        // The greatest depth is the height of the tree.
         if (nodes[i]->depth > height)
         {
             height = nodes[i]->depth;

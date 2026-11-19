@@ -17,10 +17,18 @@ struct DepartmentNode
 
     // Create a node; depth is one more than its parent's (0 for the root).
     DepartmentNode(const string& departmentName, DepartmentNode* parentNode)
-        : name(departmentName),
-          parent(parentNode),
-          depth(parentNode ? parentNode->depth + 1 : 0)
     {
+        name = departmentName;
+        parent = parentNode;
+
+        if (parentNode == nullptr)
+        {
+            depth = 0;
+        }
+        else
+        {
+            depth = parentNode->depth + 1;
+        }
     }
 };
 

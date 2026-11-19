@@ -1,0 +1,79 @@
+MEMBER C (SANKALP) - FINAL PROJECT TEST RESULTS
+Local run: 2026-11-18, macOS, C++17. CELL testing is still pending.
+
+Build: g++ -std=c++17 -Wall -Wextra -pedantic -Iinclude src/*.cpp -o campus
+Run: ./campus [data-directory]
+For each case: Enter at startup, 13, Enter, 14, Enter, 15, Enter, 18.
+The current shared menu uses 18 to exit; the assignment requires 0.
+
+1. Sample - Postorder
+Expected: Postorder: Computer Science -> Electrical Engineering -> College of Engineering -> Mathematics -> Physics -> College of Science -> University
+Actual: Postorder: Computer Science -> Electrical Engineering -> College of Engineering -> Mathematics -> Physics -> College of Science -> University
+Result: Passed
+
+2. Sample - Level-order
+Expected: Level-order: University -> College of Engineering -> College of Science -> Computer Science -> Electrical Engineering -> Mathematics -> Physics
+Actual: Level-order: University -> College of Engineering -> College of Science -> Computer Science -> Electrical Engineering -> Mathematics -> Physics
+Result: Passed
+
+3. Sample - Statistics
+Expected: Total departments: 7; Leaf departments: 4; Tree height: 2
+Actual: Total departments: 7; Leaf departments: 4; Tree height: 2
+Result: Passed
+
+4. Empty - Postorder
+Expected: No departments are loaded.
+Actual: No departments are loaded.
+Result: Passed
+
+5. Empty - Level-order
+Expected: No departments are loaded.
+Actual: No departments are loaded.
+Result: Passed
+
+6. Empty - Statistics
+Expected: Total departments: 0; Leaf departments: 0; Tree height: N/A
+Actual: Total departments: 0; Leaf departments: 0; Tree height: N/A
+Result: Passed
+
+7. Root only - Postorder
+Expected: Postorder: School
+Actual: Postorder: School
+Result: Passed
+
+8. Root only - Level-order
+Expected: Level-order: School
+Actual: Level-order: School
+Result: Passed
+
+9. Root only - Statistics
+Expected: Total departments: 1; Leaf departments: 1; Tree height: 0
+Actual: Total departments: 1; Leaf departments: 1; Tree height: 0
+Result: Passed
+
+10. Branching - Postorder
+Expected: Postorder: Last -> Deep -> First -> Second -> Third -> Root
+Actual: Postorder: Last -> Deep -> First -> Second -> Third -> Root
+Result: Passed
+
+11. Branching - Level-order
+Expected: Level-order: Root -> First -> Second -> Third -> Deep -> Last
+Actual: Level-order: Root -> First -> Second -> Third -> Deep -> Last
+Result: Passed
+
+12. Branching - Statistics
+Expected: Total departments: 6; Leaf departments: 3; Tree height: 3
+Actual: Total departments: 6; Leaf departments: 3; Tree height: 3
+Result: Passed
+
+Custom department file for Branching:
+Root|NONE
+First|Root
+Second|Root
+Third|Root
+Deep|First
+Last|Deep
+
+Empty: all four files empty. Root only: departments.txt contains School|NONE; other files empty.
+
+Result: 12/12 checks passed. Two existing signed/unsigned warnings in FacilityDatabase.cpp remain outside Member C scope.

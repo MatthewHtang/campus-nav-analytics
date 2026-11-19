@@ -26,7 +26,7 @@ public:
     bool addDepartment(const string& name, const string& parentName,
                        string& reason);
 
-    // Menu option 6: ask for a parent only when the tree already has a root.
+    // Final menu option 9: ask for a parent only when the tree already has a root.
     void addDepartmentFromInput();
 
     bool isEmpty() const;       // true when there is no root
@@ -37,7 +37,7 @@ public:
     void displayHierarchy() const; // preorder, 4 spaces of indent per depth
     void displayPreorder() const;  // preorder sequence, no indentation
 
-    // ---- Final-phase features (not in the M1 menu) -----------------------
+    // Final menu options 13, 14, and 15.
     void displayPostorder() const;
     void displayLevelOrder() const; // uses a queue
     void displayStatistics() const; // total, leaves, height
