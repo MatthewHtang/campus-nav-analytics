@@ -1,5 +1,5 @@
 // Authors: Matthew Htang (Member A), Alka Gurung (Member B) and Sankalp (Member C)
-// Purpose: Load campus data and run the Milestone 1 menu.
+// Purpose: Load campus data and run the Final project menu.
 
 #include <iostream>
 #include <string>
@@ -146,15 +146,15 @@ int main(int argc, char* argv[]) {
             break;
 
             case 13:
-            //call your function accoriding to the menu
+            departments.displayPostorder();
             break;
 
             case 14:
-            //call your function accoriding to the menu
+            departments.displayLevelOrder();
             break;
 
             case 15:
-            //call your function accoriding to the menu
+            departments.displayStatistics();
             break;
 
             //Facility Category Report
