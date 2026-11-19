@@ -73,3 +73,7 @@ Testing/
 .DS_Store
 .vscode/
 .idea/
+
+# File
+img/
+
