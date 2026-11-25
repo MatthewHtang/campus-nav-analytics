@@ -99,23 +99,23 @@ Final: Facility Searches
 #  | Test                        | Menu | Input            | Expected                          | Actual         | Pass/Fail
 ---+-----------------------------+------+------------------+-----------------------------------+----------------+----------
                                 SEARCH BY ID (this uses hash table)
-1  | ID found                    | 2    | F004             | Found: F004 Computer Lab A        |same as expected| Passed
-2  | Lowercase ID                | 2    | f004             | Same as test 1                    |same as expected| Passed
-3  | Not found                   | 2    | F999             | Not found: F999                   |same as expected| Passed
-4  | Blank                       | 2    | (press Enter)    | Error, back to menu               |same as expected| Passed
+9  | ID found                    | 2    | F004             | Found: F004 Computer Lab A        |same as expected| Passed
+10 | Lowercase ID                | 2    | f004             | Same as test 1                    |same as expected| Passed
+11 | Not found                   | 2    | F999             | Not found: F999                   |same as expected| Passed
+12 | Blank                       | 2    | (press Enter)    | Error, back to menu               |same as expected| Passed
 
                                 SEARCH BY NAME (this scans vector)
-5  | Name with two matches       | 3    | Room 101         | F005, F007, Matches: 2            |same as expected| Passed
-6  | Name with lowercase         | 3    | room 101         | Matches: 2                        |same as expected| Passed
-7  | Name with extra spaces      | 3    | "  Room 101  "   | Matches: 2                        |same as expected| Passed
-8  | Building, not facility      | 3    | Gym              | Matches: 0                        |same as expected| Passed
-9  | Blank                       | 3    | (press Enter)    | Error, back to menu               |same as expected| Passed
+13 | Name with two matches       | 3    | Room 101         | F005, F007, Matches: 2            |same as expected| Passed
+14 | Name with lowercase         | 3    | room 101         | Matches: 2                        |same as expected| Passed
+15 | Name with extra spaces      | 3    | "  Room 101  "   | Matches: 2                        |same as expected| Passed
+16 | Building, not facility      | 3    | Gym              | Matches: 0                        |same as expected| Passed
+17 | Blank                       | 3    | (press Enter)    | Error, back to menu               |same as expected| Passed
 
                                 SEARCH BY CATEGORY (this scans vector)
-10 | Category with lowercase     | 4    | computer lab     | F004, F006, Matches: 2            |same as expected| Passed
-11 | Partial category            | 4    | Lab              | Matches: 0                        |same as expected| Passed
-12 | Unknown category            | 4    | Cafeteria        | Matches: 0                        |same as expected| Passed
-13 | Blank                       | 4    | (press Enter)    | Error, back to menu               |same as expected| Passed
+18 | Category with lowercase     | 4    | computer lab     | F004, F006, Matches: 2            |same as expected| Passed
+19 | Partial category            | 4    | Lab              | Matches: 0                        |same as expected| Passed
+20 | Unknown category            | 4    | Cafeteria        | Matches: 0                        |same as expected| Passed
+21 | Blank                       | 4    | (press Enter)    | Error, back to menu               |same as expected| Passed
 
 
 ____________________________________________________________________________________________________________________________________________
