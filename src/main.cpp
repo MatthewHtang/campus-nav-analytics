@@ -3,10 +3,12 @@
 
 #include <iostream>
 #include <string>
+#include <limits>
 #include "CampusGraph.h"
 #include "FacilityDatabase.h"
 #include "DepartmentTree.h"
 #include "Utils.h"
+
 
 #include "Screen.h"
 
@@ -121,11 +123,16 @@ int main(int argc, char* argv[]) {
             case 7: {
                 string startBuilding = promptLine("Enter starting building: ");
                 graph.bfs(startBuilding);
+                break;
             }
             
-            case 8:
-            //Call your function according to the menu
-            break;
+            case 8: {
+            // Get the starting and destination buildings
+           string startBuilding = promptLine("Enter starting building: ");
+           string destinationBuilding = promptLine("Enter destination building: ");
+           graph.shortestPath(startBuilding, destinationBuilding);
+           break;
+           }
 
             case 9:
             departments.addDepartmentFromInput();
@@ -163,7 +170,8 @@ int main(int argc, char* argv[]) {
             break;
 
             case 17:
-            //call your function accoriding to the menu
+            // Display the graph connectivity report
+            graph.displayConnectivityReport();
             break;
 
             case 18:
